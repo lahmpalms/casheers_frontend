@@ -20,11 +20,10 @@ api.interceptors.request.use((config) => {
 
 // Auth related API calls
 export const authAPI = {
-  login: async (email, password, role = 'user') => {
+  login: async (email, password) => {
     const response = await api.post('/auth/login', {
       email,
       password,
-      role,
     });
     return response.data;
   },
