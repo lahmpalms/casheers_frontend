@@ -24,7 +24,7 @@ import {
 import { DataGrid } from "@mui/x-data-grid";
 import api from "../lib/api";
 import { Editor } from "@tinymce/tinymce-react";
-import CloseIcon from '@mui/icons-material/Close';
+import CloseIcon from "@mui/icons-material/Close";
 
 // Custom StepConnector style
 const CustomStepConnector = styled(StepConnector)(() => ({
@@ -51,14 +51,14 @@ export default function NewProjectDialog({ open, onClose }) {
   const [notification, setNotification] = useState({
     open: false,
     message: "",
-    severity: "info"
+    severity: "info",
   });
   const [errors, setErrors] = useState({
     name: "",
     subject: "",
     message: "",
     emails: "",
-    template: ""
+    template: "",
   });
 
   const [projectData, setProjectData] = useState({
@@ -108,7 +108,7 @@ export default function NewProjectDialog({ open, onClose }) {
 </footer></td>
 </tr>
 </tbody>
-</table>`
+</table>`,
   });
 
   // Steps for the Stepper.
@@ -173,23 +173,28 @@ export default function NewProjectDialog({ open, onClose }) {
 </footer></td>
 </tr>
 </tbody>
-</table>`
+</table>`,
     });
     setNotification({
       open: false,
       message: "",
-      severity: "info"
+      severity: "info",
     });
   }, []);
 
   // Handle dialog close
   const handleDialogClose = useCallback(() => {
+    if (isSubmitting) {
+      resetDialog();
+      onClose();
+      return; // Prevent closing while submitting
+    }
     resetDialog();
     onClose();
-  }, [onClose, resetDialog]);
+  }, [onClose, resetDialog, isSubmitting]);
 
   const handleCloseNotification = () => {
-    setNotification(prev => ({ ...prev, open: false }));
+    setNotification((prev) => ({ ...prev, open: false }));
   };
 
   // Function: Fetch emails from Google Sheet using your API.
@@ -202,12 +207,26 @@ export default function NewProjectDialog({ open, onClose }) {
         "/project/extract-emails-from-google-sheet",
         data.toString(),
         {
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
         }
       );
-      setUploadedEmails(response.data.emails);
+      setUploadedEmails(response.data.data);
+      setErrors((prev) => ({ ...prev, emails: "" }));
     } catch (error) {
       console.error("Error fetching emails from Google Sheet", error);
+      setNotification({
+        open: true,
+        message:
+          error.response?.data?.message ||
+          "Error fetching emails from Google Sheet",
+        severity: "error",
+      });
+      setErrors((prev) => ({
+        ...prev,
+        emails: "Failed to fetch emails from Google Sheet",
+      }));
     } finally {
       setIsLoading(false);
     }
@@ -230,21 +249,21 @@ export default function NewProjectDialog({ open, onClose }) {
           onChange={(e) => setEditEmailValue(e.target.value)}
           fullWidth
           sx={{
-            '& .MuiInputBase-input': {
-              padding: '8px 12px',
-            }
+            "& .MuiInputBase-input": {
+              padding: "8px 12px",
+            },
           }}
         />
       ) : (
         <Typography
           variant="body2"
           sx={{
-            fontFamily: 'Inter, sans-serif',
-            fontSize: '0.875rem',
-            color: 'rgba(0, 0, 0, 0.87)',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap'
+            fontFamily: "Inter, sans-serif",
+            fontSize: "0.875rem",
+            color: "rgba(0, 0, 0, 0.87)",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
           }}
         >
           {params.value}
@@ -255,22 +274,24 @@ export default function NewProjectDialog({ open, onClose }) {
     const renderActionsCell = (params) => {
       const isEditing = editingRowId === params.row.id;
       return isEditing ? (
-        <Box sx={{ display: 'flex', gap: 1 }}>
+        <Box sx={{ display: "flex", gap: 1 }}>
           <Button
             variant="contained"
             size="small"
             sx={{
-              backgroundColor: '#4CAF50',
-              '&:hover': { backgroundColor: '#45a049' },
-              color: 'white',
-              minWidth: '32px',
-              padding: '4px 12px'
+              backgroundColor: "#4CAF50",
+              "&:hover": { backgroundColor: "#45a049" },
+              color: "white",
+              minWidth: "32px",
+              padding: "4px 12px",
             }}
             onClick={(e) => {
               e.stopPropagation();
               setUploadedEmails((prev) =>
-                prev.map((email, idx) =>
-                  idx + 1 === params.row.id ? editEmailValue : email
+                prev.map((item) =>
+                  item.ticket_id === params.row.ticket_id
+                    ? { ...item, email: editEmailValue }
+                    : item
                 )
               );
               setEditingRowId(null);
@@ -283,14 +304,14 @@ export default function NewProjectDialog({ open, onClose }) {
             variant="outlined"
             size="small"
             sx={{
-              borderColor: '#666',
-              color: '#666',
-              '&:hover': {
-                borderColor: '#333',
-                color: '#333'
+              borderColor: "#666",
+              color: "#666",
+              "&:hover": {
+                borderColor: "#333",
+                color: "#333",
               },
-              minWidth: '32px',
-              padding: '4px 12px'
+              minWidth: "32px",
+              padding: "4px 12px",
             }}
             onClick={(e) => {
               e.stopPropagation();
@@ -306,14 +327,14 @@ export default function NewProjectDialog({ open, onClose }) {
           variant="outlined"
           size="small"
           sx={{
-            borderColor: '#ED6D23',
-            color: '#ED6D23',
-            '&:hover': {
-              borderColor: '#d65a1c',
-              backgroundColor: 'rgba(237, 109, 35, 0.04)'
+            borderColor: "#ED6D23",
+            color: "#ED6D23",
+            "&:hover": {
+              borderColor: "#d65a1c",
+              backgroundColor: "rgba(237, 109, 35, 0.04)",
             },
-            minWidth: '32px',
-            padding: '4px 12px'
+            minWidth: "32px",
+            padding: "4px 12px",
           }}
           onClick={(e) => {
             e.stopPropagation();
@@ -330,19 +351,19 @@ export default function NewProjectDialog({ open, onClose }) {
         field: "id",
         headerName: "#",
         width: 70,
-        headerAlign: 'center',
-        align: 'center',
+        headerAlign: "center",
+        align: "center",
         renderHeader: () => (
           <Typography
             variant="subtitle2"
             sx={{
               fontWeight: 600,
-              color: 'rgba(0, 0, 0, 0.87)'
+              color: "rgba(0, 0, 0, 0.87)",
             }}
           >
             #
           </Typography>
-        )
+        ),
       },
       {
         field: "email",
@@ -354,7 +375,7 @@ export default function NewProjectDialog({ open, onClose }) {
             variant="subtitle2"
             sx={{
               fontWeight: 600,
-              color: 'rgba(0, 0, 0, 0.87)'
+              color: "rgba(0, 0, 0, 0.87)",
             }}
           >
             Email Address
@@ -363,18 +384,66 @@ export default function NewProjectDialog({ open, onClose }) {
         renderCell: renderEmailCell,
       },
       {
-        field: "actions",
-        headerName: "Actions",
-        width: 200,
-        sortable: false,
-        headerAlign: 'center',
-        align: 'center',
+        field: "firstname",
+        headerName: "First Name",
+        width: 150,
         renderHeader: () => (
           <Typography
             variant="subtitle2"
             sx={{
               fontWeight: 600,
-              color: 'rgba(0, 0, 0, 0.87)'
+              color: "rgba(0, 0, 0, 0.87)",
+            }}
+          >
+            First Name
+          </Typography>
+        ),
+      },
+      {
+        field: "lastname",
+        headerName: "Last Name",
+        width: 150,
+        renderHeader: () => (
+          <Typography
+            variant="subtitle2"
+            sx={{
+              fontWeight: 600,
+              color: "rgba(0, 0, 0, 0.87)",
+            }}
+          >
+            Last Name
+          </Typography>
+        ),
+      },
+      {
+        field: "ticket_id",
+        headerName: "Ticket ID",
+        width: 200,
+        renderHeader: () => (
+          <Typography
+            variant="subtitle2"
+            sx={{
+              fontWeight: 600,
+              color: "rgba(0, 0, 0, 0.87)",
+            }}
+          >
+            Ticket ID
+          </Typography>
+        ),
+      },
+      {
+        field: "actions",
+        headerName: "Actions",
+        width: 200,
+        sortable: false,
+        headerAlign: "center",
+        align: "center",
+        renderHeader: () => (
+          <Typography
+            variant="subtitle2"
+            sx={{
+              fontWeight: 600,
+              color: "rgba(0, 0, 0, 0.87)",
             }}
           >
             Actions
@@ -387,16 +456,79 @@ export default function NewProjectDialog({ open, onClose }) {
 
   // Step navigation handlers.
   const handleNext = useCallback(() => {
-    setActiveStep((prev) => prev + 1);
-  }, []);
+    // Validate current step before proceeding
+    let hasErrors = false;
+    const newErrors = { ...errors };
+
+    if (activeStep === 0) {
+      // Validate Project Details
+      if (!projectData.name.trim()) {
+        newErrors.name = "Project name is required";
+        hasErrors = true;
+      } else {
+        newErrors.name = "";
+      }
+
+      if (!projectData.subject.trim()) {
+        newErrors.subject = "Subject is required";
+        hasErrors = true;
+      } else {
+        newErrors.subject = "";
+      }
+
+      if (!projectData.message.trim()) {
+        newErrors.message = "Message is required";
+        hasErrors = true;
+      } else {
+        newErrors.message = "";
+      }
+    }
+
+    if (activeStep === 1) {
+      // Validate Project Recipient
+      if (uploadedEmails.length === 0) {
+        newErrors.emails = "Please upload emails or fetch from Google Sheet";
+        hasErrors = true;
+      } else if (selectionModel.length === 0) {
+        newErrors.emails = "Please select at least one email";
+        hasErrors = true;
+      } else {
+        newErrors.emails = "";
+      }
+    }
+
+    if (activeStep === 2) {
+      // Validate Email Template
+      if (!projectData.template.trim()) {
+        newErrors.template = "Email template is required";
+        hasErrors = true;
+      } else {
+        newErrors.template = "";
+      }
+    }
+
+    setErrors(newErrors);
+
+    if (!hasErrors) {
+      setActiveStep((prev) => prev + 1);
+    }
+  }, [activeStep, projectData, uploadedEmails, selectionModel, errors]);
 
   const handleBack = useCallback(() => setActiveStep((prev) => prev - 1), []);
 
-  // Generic field change handler
-  const handleChange = useCallback((e) => {
-    const { name, value } = e.target;
-    setProjectData((prev) => ({ ...prev, [name]: value }));
-  }, []);
+  // Generic field change handler with validation
+  const handleChange = useCallback(
+    (e) => {
+      const { name, value } = e.target;
+      setProjectData((prev) => ({ ...prev, [name]: value }));
+
+      // Clear error when user starts typing
+      if (errors[name]) {
+        setErrors((prev) => ({ ...prev, [name]: "" }));
+      }
+    },
+    [errors]
+  );
 
   // File upload handler to extract emails.
   const handleFileUpload = useCallback(async (file) => {
@@ -407,88 +539,133 @@ export default function NewProjectDialog({ open, onClose }) {
       const response = await api.post("/project/extract-emails", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      const { emails } = response.data;
-      setUploadedEmails(emails);
+      setUploadedEmails(response?.data?.data);
+      setErrors((prev) => ({ ...prev, emails: "" }));
     } catch (err) {
       console.error("Error extracting emails:", err);
+      setNotification({
+        open: true,
+        message:
+          err.response?.data?.message || "Error extracting emails from file",
+        severity: "error",
+      });
+      setErrors((prev) => ({
+        ...prev,
+        emails: "Failed to extract emails from file",
+      }));
     } finally {
       setIsLoading(false);
     }
   }, []);
 
-  // Final submit handler
+  // Update DataGrid rows mapping
+  const rows = useMemo(
+    () =>
+      Array.isArray(uploadedEmails)
+        ? uploadedEmails.map((item, index) => ({
+            id: index + 1,
+            ...item,
+          }))
+        : [],
+    [uploadedEmails]
+  );
+
+  // Update the final submit handler to handle the new email structure
   const handleSubmit = useCallback(async () => {
+    const newErrors = {};
+    let hasErrors = false;
+
+    if (!projectData.name.trim()) {
+      newErrors.name = "Project name is required";
+      hasErrors = true;
+    }
+    if (!projectData.subject.trim()) {
+      newErrors.subject = "Subject is required";
+      hasErrors = true;
+    }
+    if (!projectData.message.trim()) {
+      newErrors.message = "Message is required";
+      hasErrors = true;
+    }
+    if (selectionModel.length === 0) {
+      newErrors.emails = "Please select at least one email";
+      hasErrors = true;
+    }
+    if (!projectData.template.trim()) {
+      newErrors.template = "Email template is required";
+      hasErrors = true;
+    }
+
+    if (hasErrors) {
+      setErrors(newErrors);
+      setNotification({
+        open: true,
+        message: "Please fill in all required fields",
+        severity: "error",
+      });
+      return;
+    }
+
     setIsSubmitting(true);
     try {
-    const selectedEmails = uploadedEmails.filter((_, idx) =>
-      selectionModel.includes(idx + 1)
-    );
+      const selectedEmails = uploadedEmails.filter((_, idx) =>
+        selectionModel.includes(idx + 1)
+      );
 
-      // Show creating project notification
       setNotification({
         open: true,
         message: "Creating project...",
-        severity: "info"
+        severity: "info",
       });
 
-    const submissionData = {
-      name: projectData.name,
-      message: projectData.message,
-      subject: projectData.subject,
-        emails: selectedEmails,
-      googleSheetLink: projectData.googleSheetLink,
+      const submissionData = {
+        name: projectData.name,
+        message: projectData.message,
+        subject: projectData.subject,
+        emails: selectedEmails.map((item) => ({
+          email: item.email,
+          firstname: item.firstname,
+          lastname: item.lastname,
+          ticket_id: item.ticket_id,
+          attach_url: item.attach_url,
+        })),
+        googleSheetLink: projectData.googleSheetLink,
         htmlTemplate: projectData.template,
       };
 
-      // First API call to create project
-      const createResponse = await api.post("/project/create", submissionData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const createResponse = await api.post("/project/create", submissionData);
 
-      // Show project created notification
       setNotification({
         open: true,
         message: "Project created successfully! Sending emails...",
-        severity: "success"
+        severity: "success",
       });
 
-      // Second API call to send emails
-      const sendResponse = await api.post(
-        `/project/${createResponse.data.project_id}/send`,
-        {},
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      await api.post(`/project/${createResponse.data.project_id}/send`, {});
 
-      // Show final success notification
       setNotification({
         open: true,
-        message: sendResponse.data.message,
-        severity: "success"
+        message: "Emails sent successfully!",
+        severity: "success",
       });
 
-      // Close dialog after short delay
+      // ✅ Stop loading and close dialog
+      setIsSubmitting(false);
       setTimeout(() => {
-    onClose();
-      }, 2000);
-
+        handleDialogClose(); // Ensure it resets the form and closes the dialog
+      }, 1500);
     } catch (error) {
       console.error("Error:", error);
       setNotification({
         open: true,
-        message: error.response?.data?.message || "An error occurred",
-        severity: "error"
+        message:
+          error.response?.data?.message ||
+          "An error occurred while creating the project",
+        severity: "error",
       });
-    } finally {
       setIsSubmitting(false);
-      resetDialog();
     }
-  }, [onClose, selectionModel, uploadedEmails, projectData]);
+  }, [onClose, selectionModel, uploadedEmails, projectData, handleDialogClose]);
 
   // Handle editor content change
   const handleEditorChange = (content) => {
@@ -505,19 +682,14 @@ export default function NewProjectDialog({ open, onClose }) {
 
   return (
     <>
-      <Dialog 
-        open={open} 
-        onClose={handleDialogClose}
-        fullWidth 
-        maxWidth="lg"
-      >
-        <DialogTitle sx={{ m: 0, p: 2, position: 'relative' }}>
+      <Dialog open={open} onClose={handleDialogClose} fullWidth maxWidth="lg">
+        <DialogTitle sx={{ m: 0, p: 2, position: "relative" }}>
           New Project
           <IconButton
             aria-label="close"
             onClick={handleDialogClose}
             sx={{
-              position: 'absolute',
+              position: "absolute",
               right: 8,
               top: 8,
               color: (theme) => theme.palette.grey[500],
@@ -526,15 +698,15 @@ export default function NewProjectDialog({ open, onClose }) {
             <CloseIcon />
           </IconButton>
         </DialogTitle>
-      <DialogContent>
-        <Stepper
-          activeStep={activeStep}
-          alternativeLabel
-          connector={<CustomStepConnector />}
-          sx={{
-            "& .MuiStepIcon-root": { color: "#ccc" },
-            "& .MuiStepIcon-root.Mui-active": { color: "#ED6D23" },
-            "& .MuiStepIcon-root.Mui-completed": { color: "#ED6D23" },
+        <DialogContent>
+          <Stepper
+            activeStep={activeStep}
+            alternativeLabel
+            connector={<CustomStepConnector />}
+            sx={{
+              "& .MuiStepIcon-root": { color: "#ccc" },
+              "& .MuiStepIcon-root.Mui-active": { color: "#ED6D23" },
+              "& .MuiStepIcon-root.Mui-completed": { color: "#ED6D23" },
               "& .MuiStepLabel-label.Mui-active": {
                 color: "#ED6D23",
                 fontWeight: "bold",
@@ -543,81 +715,81 @@ export default function NewProjectDialog({ open, onClose }) {
                 color: "#ED6D23",
                 fontWeight: "bold",
               },
-            mb: 2,
-          }}
-        >
-          {steps.map((label) => (
-            <Step key={label}>
-              <StepLabel>{label}</StepLabel>
-            </Step>
-          ))}
-        </Stepper>
+              mb: 2,
+            }}
+          >
+            {steps.map((label) => (
+              <Step key={label}>
+                <StepLabel>{label}</StepLabel>
+              </Step>
+            ))}
+          </Stepper>
 
           <Box sx={{ mt: 2, position: "relative" }}>
-          {/* STEP 0: Project Details */}
-          {activeStep === 0 && (
-            <>
-              <TextField
-                label="Project Name"
-                name="name"
-                value={projectData.name}
-                onChange={handleChange}
-                fullWidth
-                margin="normal"
+            {/* STEP 0: Project Details */}
+            {activeStep === 0 && (
+              <>
+                <TextField
+                  label="Project Name"
+                  name="name"
+                  value={projectData.name}
+                  onChange={handleChange}
+                  fullWidth
+                  margin="normal"
                   error={!!errors.name}
                   helperText={errors.name}
                   required
-              />
-              <TextField
-                label="Subject"
-                name="subject"
-                value={projectData.subject}
-                onChange={handleChange}
-                fullWidth
-                margin="normal"
+                />
+                <TextField
+                  label="Subject"
+                  name="subject"
+                  value={projectData.subject}
+                  onChange={handleChange}
+                  fullWidth
+                  margin="normal"
                   error={!!errors.subject}
                   helperText={errors.subject}
                   required
-              />
-              <TextField
-                label="Message"
-                name="message"
-                value={projectData.message}
-                onChange={handleChange}
-                fullWidth
-                multiline
-                rows={4}
-                margin="normal"
+                />
+                <TextField
+                  label="Message"
+                  name="message"
+                  value={projectData.message}
+                  onChange={handleChange}
+                  fullWidth
+                  multiline
+                  rows={4}
+                  margin="normal"
                   error={!!errors.message}
                   helperText={errors.message}
                   required
-              />
-            </>
-          )}
+                />
+              </>
+            )}
 
-          {/* STEP 1: Project Recipient */}
-          {activeStep === 1 && (
-            <>
-              {uploadedEmails.length === 0 ? (
-                <>
-                  <TextField
-                    label="Google Sheet Link"
-                    name="googleSheetLink"
-                    value={projectData.googleSheetLink || ""}
-                    onChange={handleChange}
-                    fullWidth
-                    margin="normal"
+            {/* STEP 1: Project Recipient */}
+            {activeStep === 1 && (
+              <>
+                {uploadedEmails?.length === 0 ? (
+                  <>
+                    <TextField
+                      label="Google Sheet Link"
+                      name="googleSheetLink"
+                      value={projectData.googleSheetLink || ""}
+                      onChange={handleChange}
+                      fullWidth
+                      margin="normal"
                       disabled={isLoading}
-                  />
-                  <Box
-                    sx={{
-                      display: "flex",
-                      gap: 2,
-                      alignItems: "center",
-                      mt: 2,
-                      mb: 1,
-                    }}
-                  >
+                    />
+                    <Box
+                      sx={{
+                        display: "flex",
+                        gap: 2,
+                        alignItems: "center",
+                        mt: 2,
+                        mb: 1,
+                      }}
+                    >
                       <Button
                         variant="contained"
                         onClick={handleFetchFromGoogleSheet}
@@ -628,8 +800,8 @@ export default function NewProjectDialog({ open, onClose }) {
                         ) : (
                           "Fetch Emails from Google Sheet"
                         )}
-                    </Button>
-                    <Typography variant="body2">or</Typography>
+                      </Button>
+                      <Typography variant="body2">or</Typography>
                       <Button
                         variant="outlined"
                         component="label"
@@ -658,27 +830,45 @@ export default function NewProjectDialog({ open, onClose }) {
                       </Button>
                     </Box>
                     {errors.emails && (
-                      <Typography color="error" variant="caption" sx={{ mt: 1 }}>
+                      <Typography
+                        color="error"
+                        variant="caption"
+                        sx={{ mt: 1 }}
+                      >
                         {errors.emails}
                       </Typography>
                     )}
                   </>
                 ) : (
                   <>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        mb: 2,
+                      }}
+                    >
                       <Typography variant="h6" component="h2">
                         Uploaded Emails
                       </Typography>
-                      <Box sx={{ display: 'flex', gap: 2 }}>
+                      <Box sx={{ display: "flex", gap: 2 }}>
                         <Button
                           variant="outlined"
                           color="error"
                           onClick={() => {
                             setUploadedEmails([]);
                             setSelectionModel([]);
-                            setProjectData(prev => ({ ...prev, googleSheetLink: '' }));
+                            setProjectData((prev) => ({
+                              ...prev,
+                              googleSheetLink: "",
+                            }));
                           }}
-                          startIcon={<span role="img" aria-label="clear">🗑️</span>}
+                          startIcon={
+                            <span role="img" aria-label="clear">
+                              🗑️
+                            </span>
+                          }
                         >
                           Clear Data
                         </Button>
@@ -691,19 +881,19 @@ export default function NewProjectDialog({ open, onClose }) {
                           component="label"
                         >
                           Upload New File
-                      <input
-                        type="file"
-                        accept=".xlsx"
-                        hidden
-                        onChange={async (e) => {
-                          const file = e.target.files[0];
-                          if (file) {
-                            await handleFileUpload(file);
-                          }
-                        }}
-                      />
-                    </Button>
-                  </Box>
+                          <input
+                            type="file"
+                            accept=".xlsx"
+                            hidden
+                            onChange={async (e) => {
+                              const file = e.target.files[0];
+                              if (file) {
+                                await handleFileUpload(file);
+                              }
+                            }}
+                          />
+                        </Button>
+                      </Box>
                     </Box>
                     <Paper
                       sx={{
@@ -730,101 +920,105 @@ export default function NewProjectDialog({ open, onClose }) {
                           <CircularProgress sx={{ color: "#ED6D23" }} />
                         </Box>
                       )}
-                  <DataGrid
-                    rows={uploadedEmails.map((email, index) => ({
-                      id: index + 1,
-                      email,
-                    }))}
-                    columns={emailColumns}
-                    pageSizeOptions={[5, 10, 25]}
-                    initialState={{
-                      pagination: {
-                        paginationModel: { page: 0, pageSize: 10 },
-                      },
-                    }}
-                    checkboxSelection
-                    onRowSelectionModelChange={(newSelection) =>
-                      setSelectionModel(newSelection)
-                    }
-                    rowSelectionModel={selectionModel}
-                    sx={{
-                      border: '1px solid #e0e0e0',
-                      borderRadius: 1,
-                      '& .MuiDataGrid-row': {
-                        '&:hover': {
-                          backgroundColor: 'rgba(237, 109, 35, 0.04)',
-                        },
-                        '&.Mui-selected': {
-                          backgroundColor: 'rgba(237, 109, 35, 0.08)',
-                          '&:hover': {
-                            backgroundColor: 'rgba(237, 109, 35, 0.12)',
+                      <DataGrid
+                        rows={rows}
+                        columns={emailColumns}
+                        pageSizeOptions={[5, 10, 25]}
+                        initialState={{
+                          pagination: {
+                            paginationModel: { page: 0, pageSize: 10 },
                           },
-                        },
-                      },
-                      '& .MuiDataGrid-columnHeaders': {
-                        backgroundColor: '#f5f5f5',
-                        borderBottom: '2px solid #e0e0e0',
-                      },
-                      '& .MuiDataGrid-cell': {
-                        borderBottom: '1px solid #f0f0f0',
-                        padding: '8px 16px',
-                      },
-                      '& .MuiDataGrid-columnHeader': {
-                        padding: '12px 16px',
-                      },
-                      '& .MuiCheckbox-root': {
-                        color: '#ED6D23',
-                        '&.Mui-checked': {
-                          color: '#ED6D23',
-                        },
-                      },
-                      '& .MuiDataGrid-columnHeaderCheckbox, & .MuiDataGrid-cellCheckbox': {
-                        width: '64px !important',
-                        minWidth: '64px !important',
-                        maxWidth: '64px !important',
-                        paddingLeft: '16px',
-                      },
-                      '& .MuiDataGrid-footerContainer': {
-                        borderTop: '2px solid #e0e0e0',
-                      },
-                      '& .MuiDataGrid-virtualScroller': {
-                        backgroundColor: '#ffffff',
-                      },
-                    }}
-                    disableRowSelectionOnClick
-                    getRowClassName={(params) =>
-                      params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
-                    }
-                    localeText={{
-                      noRowsLabel: 'No emails uploaded',
-                      footerRowSelected: (count) =>
-                        `${count} email${count !== 1 ? 's' : ''} selected`,
-                    }}
-                  />
-                </Paper>
+                        }}
+                        checkboxSelection
+                        onRowSelectionModelChange={(newSelection) =>
+                          setSelectionModel(newSelection)
+                        }
+                        rowSelectionModel={selectionModel}
+                        sx={{
+                          border: "1px solid #e0e0e0",
+                          borderRadius: 1,
+                          "& .MuiDataGrid-row": {
+                            "&:hover": {
+                              backgroundColor: "rgba(237, 109, 35, 0.04)",
+                            },
+                            "&.Mui-selected": {
+                              backgroundColor: "rgba(237, 109, 35, 0.08)",
+                              "&:hover": {
+                                backgroundColor: "rgba(237, 109, 35, 0.12)",
+                              },
+                            },
+                          },
+                          "& .MuiDataGrid-columnHeaders": {
+                            backgroundColor: "#f5f5f5",
+                            borderBottom: "2px solid #e0e0e0",
+                          },
+                          "& .MuiDataGrid-cell": {
+                            borderBottom: "1px solid #f0f0f0",
+                            padding: "8px 16px",
+                          },
+                          "& .MuiDataGrid-columnHeader": {
+                            padding: "12px 16px",
+                          },
+                          "& .MuiCheckbox-root": {
+                            color: "#ED6D23",
+                            "&.Mui-checked": {
+                              color: "#ED6D23",
+                            },
+                          },
+                          "& .MuiDataGrid-columnHeaderCheckbox, & .MuiDataGrid-cellCheckbox":
+                            {
+                              width: "64px !important",
+                              minWidth: "64px !important",
+                              maxWidth: "64px !important",
+                              paddingLeft: "16px",
+                            },
+                          "& .MuiDataGrid-footerContainer": {
+                            borderTop: "2px solid #e0e0e0",
+                          },
+                          "& .MuiDataGrid-virtualScroller": {
+                            backgroundColor: "#ffffff",
+                          },
+                        }}
+                        disableRowSelectionOnClick
+                        getRowClassName={(params) =>
+                          params.indexRelativeToCurrentPage % 2 === 0
+                            ? "even"
+                            : "odd"
+                        }
+                        localeText={{
+                          noRowsLabel: "No emails uploaded",
+                          footerRowSelected: (count) =>
+                            `${count} email${count !== 1 ? "s" : ""} selected`,
+                        }}
+                      />
+                    </Paper>
                     {errors.emails && (
-                      <Typography color="error" variant="caption" sx={{ mt: 1 }}>
+                      <Typography
+                        color="error"
+                        variant="caption"
+                        sx={{ mt: 1 }}
+                      >
                         {errors.emails}
                       </Typography>
                     )}
                   </>
-              )}
-            </>
-          )}
+                )}
+              </>
+            )}
 
             {/* STEP 2: Project Email Template */}
-          {activeStep === 2 && (
-            <>
-              <Typography variant="subtitle1" sx={{ mt: 2, mb: 1 }}>
-                Email Template
-              </Typography>
+            {activeStep === 2 && (
+              <>
+                <Typography variant="subtitle1" sx={{ mt: 2, mb: 1 }}>
+                  Email Template
+                </Typography>
                 <Editor
                   apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY}
                   onInit={(evt, editor) => (editorRef.current = editor)}
                   value={projectData.template}
                   onEditorChange={(content) => {
                     handleEditorChange(content);
-                    setErrors(prev => ({ ...prev, template: "" }));
+                    setErrors((prev) => ({ ...prev, template: "" }));
                   }}
                   init={{
                     height: 400,
@@ -834,8 +1028,8 @@ export default function NewProjectDialog({ open, onClose }) {
                       "advlist",
                       "autolink",
                       "lists",
-                    "link",
-                    "image",
+                      "link",
+                      "image",
                       "charmap",
                       "preview",
                       "anchor",
@@ -863,61 +1057,68 @@ export default function NewProjectDialog({ open, onClose }) {
                     {errors.template}
                   </Typography>
                 )}
-            </>
-          )}
-        </Box>
-      </DialogContent>
-
-      <DialogActions>
-        {activeStep > 0 && (
-          <Button
-            onClick={handleBack}
-            variant="contained"
-            sx={{
-              backgroundColor: "#ED6D23",
-              "&:hover": { backgroundColor: "#ED6D23" },
-            }}
-            disabled={isSubmitting}
-          >
-            Back
-          </Button>
-        )}
-        {activeStep < steps.length - 1 ? (
-          <Button
-            onClick={handleNext}
-            variant="contained"
-            sx={{
-              backgroundColor: "#ED6D23",
-              "&:hover": { backgroundColor: "#ED6D23" },
-            }}
-            disabled={isSubmitting}
-          >
-            Next
-          </Button>
-        ) : (
-          <Button
-            onClick={handleSave}
-            variant="contained"
-            sx={{
-              backgroundColor: "#ED6D23",
-              "&:hover": { backgroundColor: "#ED6D23" },
-            }}
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? (
-              <CircularProgress size={24} sx={{ color: "white" }} />
-            ) : (
-              "Submit"
+              </>
             )}
-          </Button>
-        )}
-      </DialogActions>
-    </Dialog>
+          </Box>
+        </DialogContent>
+
+        <DialogActions>
+          {activeStep > 0 && (
+            <Button
+              onClick={handleBack}
+              variant="contained"
+              sx={{
+                backgroundColor: "#ED6D23",
+                "&:hover": { backgroundColor: "#ED6D23" },
+              }}
+              disabled={isSubmitting}
+            >
+              Back
+            </Button>
+          )}
+          {activeStep < steps.length - 1 ? (
+            <Button
+              onClick={handleNext}
+              variant="contained"
+              sx={{
+                backgroundColor: "#ED6D23",
+                "&:hover": { backgroundColor: "#ED6D23" },
+              }}
+              disabled={isSubmitting}
+            >
+              Next
+            </Button>
+          ) : (
+            <Button
+              onClick={handleSave}
+              variant="contained"
+              sx={{
+                backgroundColor: "#ED6D23",
+                "&:hover": { backgroundColor: "#ED6D23" },
+              }}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <CircularProgress size={24} sx={{ color: "white" }} />
+              ) : (
+                "Submit"
+              )}
+            </Button>
+          )}
+        </DialogActions>
+      </Dialog>
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={isSubmitting}
       >
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 2,
+          }}
+        >
           <CircularProgress color="inherit" />
           <Typography variant="body1" color="white">
             {isSubmitting ? "Processing..." : ""}
@@ -928,13 +1129,13 @@ export default function NewProjectDialog({ open, onClose }) {
         open={notification.open}
         autoHideDuration={6000}
         onClose={handleCloseNotification}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
       >
         <Alert
           onClose={handleCloseNotification}
           severity={notification.severity}
           variant="filled"
-          sx={{ width: '100%' }}
+          sx={{ width: "100%" }}
         >
           {notification.message}
         </Alert>

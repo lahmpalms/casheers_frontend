@@ -15,11 +15,11 @@ import {
   Chip,
 } from "@mui/material";
 import { Editor } from "@tinymce/tinymce-react";
-import CloseIcon from '@mui/icons-material/Close';
-import EmailIcon from '@mui/icons-material/Email';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import PersonIcon from '@mui/icons-material/Person';
-import { useRef } from 'react';
+import CloseIcon from "@mui/icons-material/Close";
+import EmailIcon from "@mui/icons-material/Email";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import PersonIcon from "@mui/icons-material/Person";
+import { useRef } from "react";
 
 export default function ViewProjectDialog({ open, onClose, project, loading }) {
   if (!open) return null;
@@ -27,36 +27,36 @@ export default function ViewProjectDialog({ open, onClose, project, loading }) {
   const editorRef = useRef(null);
 
   const formatDate = (dateString) => {
-    if (!dateString) return '';
+    if (!dateString) return "";
     const date = new Date(dateString);
-    return new Intl.DateTimeFormat('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
+    return new Intl.DateTimeFormat("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     }).format(date);
   };
 
   const getStatusColor = (status) => {
     const statusColors = {
-      'pending': { bg: '#FFF4E5', color: '#B76E00' },
-      'completed': { bg: '#E8F5E9', color: '#1B5E20' },
-      'failed': { bg: '#FEEBEE', color: '#B71C1C' },
-      'in_progress': { bg: '#E3F2FD', color: '#0D47A1' }
+      pending: { bg: "#FFF4E5", color: "#B76E00" },
+      completed: { bg: "#E8F5E9", color: "#1B5E20" },
+      failed: { bg: "#FEEBEE", color: "#B71C1C" },
+      in_progress: { bg: "#E3F2FD", color: "#0D47A1" },
     };
     return statusColors[status?.toLowerCase()] || statusColors.pending;
   };
 
   return (
-    <Dialog 
-      open={open} 
+    <Dialog
+      open={open}
       onClose={onClose}
-      fullWidth 
+      fullWidth
       maxWidth="md"
       scroll="paper"
     >
-      <DialogTitle sx={{ m: 0, p: 2, position: 'relative' }}>
+      <DialogTitle sx={{ m: 0, p: 2, position: "relative" }}>
         <Typography variant="h6" component="div">
           Project Details
         </Typography>
@@ -64,7 +64,7 @@ export default function ViewProjectDialog({ open, onClose, project, loading }) {
           aria-label="close"
           onClick={onClose}
           sx={{
-            position: 'absolute',
+            position: "absolute",
             right: 8,
             top: 8,
             color: (theme) => theme.palette.grey[500],
@@ -76,28 +76,39 @@ export default function ViewProjectDialog({ open, onClose, project, loading }) {
 
       <DialogContent dividers>
         {loading || !project ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
+          <Box sx={{ display: "flex", justifyContent: "center", p: 3 }}>
             <CircularProgress sx={{ color: "#ED6D23" }} />
           </Box>
         ) : (
           <Box sx={{ p: 1 }}>
             {/* Header Section */}
             <Box sx={{ mb: 3 }}>
-              <Typography variant="h5" gutterBottom sx={{ color: '#ED6D23', fontWeight: 500 }}>
+              <Typography
+                variant="h5"
+                gutterBottom
+                sx={{ color: "#ED6D23", fontWeight: 500 }}
+              >
                 {project.name}
               </Typography>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+              <Box
+                sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}
+              >
                 <Chip
-                  label={project.status?.replace('_', ' ')}
+                  label={project.status?.replace("_", " ")}
                   sx={{
                     backgroundColor: getStatusColor(project.status).bg,
                     color: getStatusColor(project.status).color,
                     fontWeight: 600,
-                    textTransform: 'capitalize',
+                    textTransform: "capitalize",
                   }}
                 />
-                <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                  <AccessTimeIcon sx={{ fontSize: '1rem', color: 'text.secondary' }} />
+                <Typography
+                  variant="body2"
+                  sx={{ display: "flex", alignItems: "center", gap: 0.5 }}
+                >
+                  <AccessTimeIcon
+                    sx={{ fontSize: "1rem", color: "text.secondary" }}
+                  />
                   {formatDate(project.created_at)}
                 </Typography>
               </Box>
@@ -106,25 +117,36 @@ export default function ViewProjectDialog({ open, onClose, project, loading }) {
             <Grid container spacing={3}>
               {/* Project Info Section */}
               <Grid item xs={12} md={6}>
-                <Paper sx={{ p: 2, height: '100%' }}>
-                  <Typography variant="subtitle2" sx={{ mb: 2, color: 'text.secondary' }}>
+                <Paper sx={{ p: 2, height: "100%" }}>
+                  <Typography
+                    variant="subtitle2"
+                    sx={{ mb: 2, color: "text.secondary" }}
+                  >
                     Project Information
                   </Typography>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  <Box
+                    sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+                  >
                     <Box>
-                      <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                      <Typography
+                        variant="caption"
+                        sx={{ color: "text.secondary" }}
+                      >
                         Subject
                       </Typography>
                       <Typography variant="body1">
-                        {project.subject || 'No subject'}
+                        {project.subject || "No subject"}
                       </Typography>
                     </Box>
                     <Box>
-                      <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                      <Typography
+                        variant="caption"
+                        sx={{ color: "text.secondary" }}
+                      >
                         Message
                       </Typography>
                       <Typography variant="body1">
-                        {project.message || 'No message'}
+                        {project.message || "No message"}
                       </Typography>
                     </Box>
                   </Box>
@@ -133,29 +155,35 @@ export default function ViewProjectDialog({ open, onClose, project, loading }) {
 
               {/* Creator Info Section */}
               <Grid item xs={12} md={6}>
-                <Paper sx={{ p: 2, height: '100%' }}>
-                  <Typography variant="subtitle2" sx={{ mb: 2, color: 'text.secondary' }}>
+                <Paper sx={{ p: 2, height: "100%" }}>
+                  <Typography
+                    variant="subtitle2"
+                    sx={{ mb: 2, color: "text.secondary" }}
+                  >
                     Created By
                   </Typography>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
                     <Box
                       sx={{
                         width: 40,
                         height: 40,
-                        borderRadius: '50%',
-                        backgroundColor: '#ED6D23',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
+                        borderRadius: "50%",
+                        backgroundColor: "#ED6D23",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
                       }}
                     >
-                      <PersonIcon sx={{ color: 'white' }} />
+                      <PersonIcon sx={{ color: "white" }} />
                     </Box>
                     <Box>
                       <Typography variant="body1">
-                        {project.created_by?.email || 'Unknown'}
+                        {project.created_by?.email || "Unknown"}
                       </Typography>
-                      <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                      <Typography
+                        variant="caption"
+                        sx={{ color: "text.secondary" }}
+                      >
                         Creator
                       </Typography>
                     </Box>
@@ -166,26 +194,40 @@ export default function ViewProjectDialog({ open, onClose, project, loading }) {
               {/* Recipients Section */}
               <Grid item xs={12}>
                 <Paper sx={{ p: 2 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-                    <EmailIcon sx={{ color: 'text.secondary' }} />
-                    <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1,
+                      mb: 2,
+                    }}
+                  >
+                    <EmailIcon sx={{ color: "text.secondary" }} />
+                    <Typography
+                      variant="subtitle2"
+                      sx={{ color: "text.secondary" }}
+                    >
                       Recipients
                     </Typography>
                   </Box>
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                    {project.emails?.map((email, index) => (
+                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                    {project.emails?.map((emailItem, index) => (
                       <Chip
                         key={index}
-                        label={email}
+                        label={
+                          typeof emailItem === "string"
+                            ? emailItem
+                            : emailItem.email
+                        } // ✅ Works for both cases
                         sx={{
-                          backgroundColor: 'rgba(237, 109, 35, 0.08)',
-                          color: '#ED6D23',
-                          '& .MuiChip-label': {
-                            fontSize: '0.875rem',
-                          }
+                          backgroundColor: "rgba(237, 109, 35, 0.08)",
+                          color: "#ED6D23",
+                          "& .MuiChip-label": {
+                            fontSize: "0.875rem",
+                          },
                         }}
                       />
-                    )) || 'No recipients'}
+                    )) || "No recipients"}
                   </Box>
                 </Paper>
               </Grid>
@@ -193,13 +235,16 @@ export default function ViewProjectDialog({ open, onClose, project, loading }) {
               {/* Template Preview Section */}
               <Grid item xs={12}>
                 <Paper sx={{ p: 2 }}>
-                  <Typography variant="subtitle2" sx={{ mb: 2, color: 'text.secondary' }}>
+                  <Typography
+                    variant="subtitle2"
+                    sx={{ mb: 2, color: "text.secondary" }}
+                  >
                     Email Template Preview
                   </Typography>
                   <Box
                     sx={{
                       mt: 2,
-                      border: '1px solid rgba(0, 0, 0, 0.12)',
+                      border: "1px solid rgba(0, 0, 0, 0.12)",
                       borderRadius: 1,
                     }}
                   >
@@ -266,12 +311,12 @@ export default function ViewProjectDialog({ open, onClose, project, loading }) {
           onClick={onClose}
           variant="outlined"
           sx={{
-            color: '#ED6D23',
-            borderColor: '#ED6D23',
-            '&:hover': {
-              borderColor: '#d65a1c',
-              backgroundColor: 'rgba(237, 109, 35, 0.04)'
-            }
+            color: "#ED6D23",
+            borderColor: "#ED6D23",
+            "&:hover": {
+              borderColor: "#d65a1c",
+              backgroundColor: "rgba(237, 109, 35, 0.04)",
+            },
           }}
         >
           Close
@@ -279,4 +324,4 @@ export default function ViewProjectDialog({ open, onClose, project, loading }) {
       </DialogActions>
     </Dialog>
   );
-} 
+}
