@@ -105,9 +105,9 @@ export default function LoginForm() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 p-4"
+      className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-300 dark:to-gray-800 p-4"
     >
-      <Box className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-2xl w-full max-w-md relative overflow-hidden">
+      <Box className="bg-white dark:bg-gray-500 p-8 rounded-2xl shadow-2xl w-full max-w-md relative overflow-hidden">
         <motion.div
           initial={{ y: -20 }}
           animate={{ y: 0 }}
@@ -146,11 +146,11 @@ export default function LoginForm() {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <Email className="text-gray-400" />
+                  <Email className="text-gray-400 dark:text-gray-300" />
                 </InputAdornment>
               ),
             }}
-            className="bg-gray-50 dark:bg-gray-700 rounded-lg"
+            className="bg-gray-50 dark:bg-gray-500 rounded-lg"
           />
 
           <TextField
@@ -179,7 +179,7 @@ export default function LoginForm() {
                 </InputAdornment>
               ),
             }}
-            className="bg-gray-50 dark:bg-gray-700 rounded-lg"
+            className="bg-gray-50 dark:bg-gray-500 rounded-lg"
           />
 
           <AnimatePresence>
@@ -230,7 +230,7 @@ export default function LoginForm() {
               variant="body2"
               className="text-gray-600 dark:text-gray-400 text-center col-span-2"
             >
-              Don&apos;t have an account?{' '}
+              Don&apos;t have an account?{" "}
               <span
                 onClick={() => {
                   setShowGif(!showGif);

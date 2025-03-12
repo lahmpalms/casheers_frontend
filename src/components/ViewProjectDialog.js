@@ -13,18 +13,23 @@ import {
   Divider,
   Grid,
   Chip,
+  Collapse,
 } from "@mui/material";
 import { Editor } from "@tinymce/tinymce-react";
 import CloseIcon from '@mui/icons-material/Close';
 import EmailIcon from '@mui/icons-material/Email';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import PersonIcon from '@mui/icons-material/Person';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 
 export default function ViewProjectDialog({ open, onClose, project, loading }) {
   if (!open) return null;
 
   const editorRef = useRef(null);
+  const [showAllRecipients, setShowAllRecipients] = useState(false);
+  
+  // Number of recipients to show initially
+  const INITIAL_RECIPIENTS_DISPLAY = 5;
 
   const formatDate = (dateString) => {
     if (!dateString) return '';
@@ -40,13 +45,36 @@ export default function ViewProjectDialog({ open, onClose, project, loading }) {
 
   const getStatusColor = (status) => {
     const statusColors = {
-      'pending': { bg: '#FFF4E5', color: '#B76E00' },
-      'completed': { bg: '#E8F5E9', color: '#1B5E20' },
-      'failed': { bg: '#FEEBEE', color: '#B71C1C' },
-      'in_progress': { bg: '#E3F2FD', color: '#0D47A1' }
+      'pending': { bg: '#FFF4E5', color: '#B76E00', dotColor: '#F59E0B' },
+      'completed': { bg: '#E8F5E9', color: '#1B5E20', dotColor: '#22C55E' },
+      'success': { bg: '#E8F5E9', color: '#1B5E20', dotColor: '#22C55E' },
+      'failed': { bg: '#FEEBEE', color: '#B71C1C', dotColor: '#EF4444' },
+      'in_progress': { bg: '#E3F2FD', color: '#0D47A1', dotColor: '#3B82F6' }
     };
     return statusColors[status?.toLowerCase()] || statusColors.pending;
   };
+
+  // Format status text for display
+  const formatStatus = (status) => {
+    if (!status) return 'Unknown';
+    // Replace underscores with spaces and capitalize first letter of each word
+    return status
+      .replace(/_/g, ' ')
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ');
+  };
+
+  // Get recipients count
+  const recipientsCount = project?.recipients?.length || 0;
+  
+  // Get recipients to display based on showAllRecipients state
+  const displayedRecipients = showAllRecipients 
+    ? project?.recipients 
+    : project?.recipients?.slice(0, INITIAL_RECIPIENTS_DISPLAY);
+
+  // Check if we need to show "See More" button
+  const hasMoreRecipients = project?.recipients?.length > INITIAL_RECIPIENTS_DISPLAY;
 
   return (
     <Dialog 
@@ -127,6 +155,19 @@ export default function ViewProjectDialog({ open, onClose, project, loading }) {
                         {project.message || 'No message'}
                       </Typography>
                     </Box>
+                    {project.googleSheetLink && (
+                      <Box>
+                        <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                          Google Sheet Link
+                        </Typography>
+                        <Typography variant="body1">
+                          <a href={project.googleSheetLink} target="_blank" rel="noopener noreferrer" 
+                             style={{ color: '#ED6D23', textDecoration: 'underline' }}>
+                            View Google Sheet
+                          </a>
+                        </Typography>
+                      </Box>
+                    )}
                   </Box>
                 </Paper>
               </Grid>
@@ -169,23 +210,78 @@ export default function ViewProjectDialog({ open, onClose, project, loading }) {
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
                     <EmailIcon sx={{ color: 'text.secondary' }} />
                     <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
-                      Recipients
+                      Recipients ({recipientsCount})
                     </Typography>
                   </Box>
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                    {project.emails?.map((email, index) => (
-                      <Chip
-                        key={index}
-                        label={email}
-                        sx={{
-                          backgroundColor: 'rgba(237, 109, 35, 0.08)',
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                      {displayedRecipients?.map((recipient, index) => {
+                        const statusColor = getStatusColor(recipient.status);
+                        const statusText = formatStatus(recipient.status);
+                        return (
+                          <Chip
+                            key={index}
+                            label={
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <Box
+                                  component="span"
+                                  sx={{
+                                    width: 10,
+                                    height: 10,
+                                    borderRadius: '50%',
+                                    backgroundColor: statusColor.dotColor,
+                                    display: 'inline-block',
+                                    boxShadow: `0 0 0 1px ${statusColor.color}`
+                                  }}
+                                />
+                                <span>{recipient.email}</span>
+                                <Box
+                                  component="span"
+                                  sx={{
+                                    fontSize: '0.7rem',
+                                    padding: '0 4px',
+                                    borderRadius: '4px',
+                                    backgroundColor: statusColor.dotColor,
+                                    color: '#fff',
+                                    fontWeight: 'bold',
+                                    ml: 0.5
+                                  }}
+                                >
+                                  {statusText}
+                                </Box>
+                              </Box>
+                            }
+                            title={`Email: ${recipient.email}, Status: ${statusText}`}
+                            sx={{
+                              backgroundColor: statusColor.bg,
+                              color: statusColor.color,
+                              border: `1px solid ${statusColor.color}40`,
+                              '& .MuiChip-label': {
+                                fontSize: '0.875rem',
+                                display: 'flex',
+                                alignItems: 'center',
+                                padding: '4px 8px'
+                              }
+                            }}
+                          />
+                        );
+                      }) || 'No recipients'}
+                    </Box>
+                    
+                    {hasMoreRecipients && (
+                      <Button 
+                        onClick={() => setShowAllRecipients(!showAllRecipients)}
+                        sx={{ 
+                          alignSelf: 'flex-start',
                           color: '#ED6D23',
-                          '& .MuiChip-label': {
-                            fontSize: '0.875rem',
+                          '&:hover': {
+                            backgroundColor: 'rgba(237, 109, 35, 0.04)'
                           }
                         }}
-                      />
-                    )) || 'No recipients'}
+                      >
+                        {showAllRecipients ? 'Show Less' : `See All (${recipientsCount})`}
+                      </Button>
+                    )}
                   </Box>
                 </Paper>
               </Grid>
