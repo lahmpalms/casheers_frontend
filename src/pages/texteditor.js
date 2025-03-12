@@ -63,10 +63,29 @@ function TextEditor() {
               ],
               toolbar:
                 "undo redo | styles | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media | forecolor backcolor emoticons",
-              content_style:
-                "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
-              forced_root_block: "p",
-              paste_as_text: false,
+              content_style: `
+                body { 
+                  font-family: Arial, Helvetica, sans-serif; 
+                  font-size: 14px;
+                  line-height: 1.5;
+                  margin: 0;
+                  padding: 16px;
+                }
+                p { margin: 0 0 1em 0; }
+                table { border-collapse: collapse; }
+                table td, table th { border: 1px solid #ddd; padding: 8px; }
+                img { max-width: 100%; height: auto; }
+                .mce-content-body [data-mce-selected=inline-boundary] { background-color: transparent; }
+              `,
+              forced_root_block: false,
+              force_br_newlines: true,
+              force_p_newlines: false,
+              convert_fonts_to_spans: true,
+              paste_as_text: true,
+              convert_urls: false,
+              keep_styles: true,
+              valid_elements: '*[*]',
+              extended_valid_elements: 'style,link[href|rel]',
             }}
           />
         </div>
