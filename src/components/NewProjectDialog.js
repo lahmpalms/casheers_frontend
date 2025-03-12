@@ -1596,6 +1596,7 @@ export default function NewProjectDialog({ open, onClose }) {
         </DialogTitle>
         <DialogContent>
           <Box sx={{ maxWidth: "100%", flexGrow: 1 }}>
+            {/* Image and content container */}
             <Box
               sx={{
                 height: 400,
@@ -1685,7 +1686,7 @@ export default function NewProjectDialog({ open, onClose }) {
                     whiteSpace: 'nowrap',
                   }}
                 >
-                  File
+                  Example
                 </Button>
               </Box>
               <Typography variant="caption" color="text.secondary">
@@ -1695,6 +1696,7 @@ export default function NewProjectDialog({ open, onClose }) {
               </Typography>
             </Box>
             
+            {/* Navigation stepper */}
             <MobileStepper
               steps={tutorialSlides.length}
               position="static"
