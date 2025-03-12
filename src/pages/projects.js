@@ -15,8 +15,18 @@ import {
   Skeleton,
   CircularProgress,
   Box,
+  IconButton,
+  Tooltip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from "@mui/material";
 import api from "../lib/api";
+import EditIcon from '@mui/icons-material/Edit';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const NewProjectDialog = dynamic(() => import("../components/NewProjectDialog"), {
   ssr: false,
@@ -24,6 +34,11 @@ const NewProjectDialog = dynamic(() => import("../components/NewProjectDialog"),
 });
 
 const ViewProjectDialog = dynamic(() => import("../components/ViewProjectDialog"), {
+  ssr: false,
+  loading: () => <CircularProgress sx={{ color: "#ED6D23" }} />
+});
+
+const EditDraftDialog = dynamic(() => import("../components/EditDraftDialog"), {
   ssr: false,
   loading: () => <CircularProgress sx={{ color: "#ED6D23" }} />
 });
@@ -39,13 +54,18 @@ const ProjectsPage = () => {
   // Dialog states
   const [openNewProject, setOpenNewProject] = useState(false);
   const [openViewProject, setOpenViewProject] = useState(false);
+  const [openEditDraft, setOpenEditDraft] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
   const [loadingProjectDetails, setLoadingProjectDetails] = useState(false);
+  // Delete confirmation dialog
+  const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false);
+  const [projectToDelete, setProjectToDelete] = useState(null);
+  const [deletingProject, setDeletingProject] = useState(false);
 
   const fetchProjects = () => {
     setLoading(true);
     api
-      .get(`/project/?page=${page + 1}&size=${rowsPerPage}`, {
+      .get(`/project/?page=${page + 1}&size=${rowsPerPage}&full_details=true`, {
         headers: { accept: "application/json" },
       })
       .then((response) => {
@@ -79,6 +99,38 @@ const ProjectsPage = () => {
       // You might want to show an error notification here
     } finally {
       setLoadingProjectDetails(false);
+    }
+  };
+
+  const handleEditDraft = async (projectId, e) => {
+    e.stopPropagation(); // Prevent row click event
+    setSelectedProject({ id: projectId });
+    setOpenEditDraft(true);
+  };
+
+  const handleDeleteProject = async (projectId, e) => {
+    e.stopPropagation(); // Prevent row click event
+    setProjectToDelete(projectId);
+    setOpenDeleteConfirm(true);
+  };
+
+  const confirmDeleteProject = async () => {
+    if (!projectToDelete) return;
+    
+    setDeletingProject(true);
+    try {
+      await api.delete(`/project/${projectToDelete}`, {
+        headers: { accept: "application/json" },
+      });
+      // Refresh the projects list after successful deletion
+      fetchProjects();
+    } catch (err) {
+      console.error("Error deleting project:", err);
+      // You might want to show an error notification here
+    } finally {
+      setDeletingProject(false);
+      setOpenDeleteConfirm(false);
+      setProjectToDelete(null);
     }
   };
 
@@ -122,7 +174,8 @@ const ProjectsPage = () => {
           'pending': { bg: '#FFF4E5', color: '#B76E00' },
           'completed': { bg: '#E8F5E9', color: '#1B5E20' },
           'failed': { bg: '#FEEBEE', color: '#B71C1C' },
-          'in_progress': { bg: '#E3F2FD', color: '#0D47A1' }
+          'in_progress': { bg: '#E3F2FD', color: '#0D47A1' },
+          'draft': { bg: '#F3F4F6', color: '#4B5563' }
         };
         const status = value?.toLowerCase() || 'pending';
         const colors = statusColors[status] || statusColors.pending;
@@ -146,25 +199,6 @@ const ProjectsPage = () => {
           </Box>
         );
       }
-    },
-    { 
-      id: "message", 
-      label: "Message", 
-      minWidth: 250,
-      renderCell: (value) => (
-        <Typography
-          variant="body2"
-          sx={{
-            color: 'rgba(0, 0, 0, 0.67)',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-            maxWidth: '250px'
-          }}
-        >
-          {value}
-        </Typography>
-      )
     },
     { 
       id: "createdBy", 
@@ -200,6 +234,63 @@ const ProjectsPage = () => {
         </Typography>
       )
     },
+    {
+      id: "actions",
+      label: "Actions",
+      minWidth: 100,
+      renderCell: (_, row) => {
+        const isDraft = row.status?.toLowerCase() === 'draft';
+        
+        return (
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            <Tooltip title="View Project">
+              <IconButton
+                size="small"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleViewProject(row.id);
+                }}
+                sx={{ 
+                  color: '#ED6D23',
+                  '&:hover': { backgroundColor: 'rgba(237, 109, 35, 0.04)' }
+                }}
+              >
+                <VisibilityIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
+            
+            {isDraft && (
+              <>
+                <Tooltip title="Edit Draft">
+                  <IconButton
+                    size="small"
+                    onClick={(e) => handleEditDraft(row.id, e)}
+                    sx={{ 
+                      color: '#4B5563',
+                      '&:hover': { backgroundColor: 'rgba(75, 85, 99, 0.04)' }
+                    }}
+                  >
+                    <EditIcon fontSize="small" />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Delete Draft">
+                  <IconButton
+                    size="small"
+                    onClick={(e) => handleDeleteProject(row.id, e)}
+                    sx={{ 
+                      color: '#d32f2f',
+                      '&:hover': { backgroundColor: 'rgba(211, 47, 47, 0.04)' }
+                    }}
+                  >
+                    <DeleteIcon fontSize="small" />
+                  </IconButton>
+                </Tooltip>
+              </>
+            )}
+          </Box>
+        );
+      }
+    }
   ];
 
   // Transform projects data to rows, adding a 'createdBy' field
@@ -278,6 +369,54 @@ const ProjectsPage = () => {
         project={selectedProject}
         loading={loadingProjectDetails}
       />
+
+      {/* Edit Draft Dialog */}
+      <EditDraftDialog
+        open={openEditDraft}
+        onClose={(refreshNeeded) => {
+          setOpenEditDraft(false);
+          setSelectedProject(null);
+          if (refreshNeeded) {
+            fetchProjects(); // Refresh the list if changes were made
+          }
+        }}
+        projectId={selectedProject?.id}
+      />
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog
+        open={openDeleteConfirm}
+        onClose={() => !deletingProject && setOpenDeleteConfirm(false)}
+        aria-labelledby="delete-dialog-title"
+        aria-describedby="delete-dialog-description"
+      >
+        <DialogTitle id="delete-dialog-title">
+          Delete Draft Project
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="delete-dialog-description">
+            Are you sure you want to delete this draft project? This action cannot be undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button 
+            onClick={() => setOpenDeleteConfirm(false)} 
+            disabled={deletingProject}
+            sx={{ color: 'rgba(0, 0, 0, 0.67)' }}
+          >
+            Cancel
+          </Button>
+          <Button 
+            onClick={confirmDeleteProject} 
+            color="error" 
+            variant="contained"
+            disabled={deletingProject}
+            startIcon={deletingProject ? <CircularProgress size={20} color="inherit" /> : null}
+          >
+            {deletingProject ? "Deleting..." : "Delete"}
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       <Paper 
         sx={{ 
@@ -365,7 +504,7 @@ const ProjectsPage = () => {
                     role="checkbox"
                     tabIndex={-1}
                     key={row._id}
-                    onClick={() => handleViewProject(row._id)}
+                    onClick={() => handleViewProject(row.id)}
                     sx={{ 
                       cursor: 'pointer',
                       '&:hover': {
@@ -384,7 +523,7 @@ const ProjectsPage = () => {
                           key={column.id} 
                           align={column.align || "left"}
                         >
-                          {column.renderCell ? column.renderCell(value) : value}
+                          {column.renderCell ? column.renderCell(value, row) : value}
                         </TableCell>
                       );
                     })}
