@@ -345,13 +345,18 @@ export default function ViewProjectDialog({ open, onClose, project, loading }) {
                           img { max-width: 100%; height: auto; }
                           .mce-content-body [data-mce-selected=inline-boundary] { background-color: transparent; }
                         `,
-                        // For view mode, we want to preserve the formatting as is
-                        forced_root_block: false,
-                        force_br_newlines: true,
-                        force_p_newlines: false,
+                        // Email-specific settings
+                        forced_root_block: "p",
+                        remove_trailing_brs: false,
                         paste_as_text: false,
                         branding: false,
                         resize: false,
+                        convert_urls: false,
+                        valid_elements: '*[*]', // Allow all elements and attributes
+                        extended_valid_elements: 'style,link[href|rel]',
+                        entity_encoding: 'raw',
+                        // Ensure newlines are preserved
+                        newline_behavior: "block",
                       }}
                       disabled={true}
                     />
