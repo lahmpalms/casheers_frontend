@@ -85,95 +85,65 @@ export default function NewProjectDialog({ open, onClose }) {
     subject: "",
     emails: "",
     googleSheetLink: "",
-    template: `<!DOCTYPE html>
-<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" lang="en">
-
-<head>
-    <title></title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            padding: 0;
-        }
-
-        a[x-apple-data-detectors], a {
-            color: inherit !important;
-            text-decoration: none !important;
-        }
-    </style>
-</head>
-
-<body style="background-color: #ffffff; margin: 0; padding: 0;">
-    <table width="100%" border="0" cellpadding="0" cellspacing="0" style="background-color: #ffffff;">
-        <tbody>
+    template: `<table width="100%" border="0" cellpadding="0" cellspacing="0" style="background-color: #ffffff;">
+  <tbody>
+    <tr>
+      <td>
+        <table align="center" width="600" border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto;">
+          <tbody>
             <tr>
-                <td>
-                    <table align="center" width="600" border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto;">
-                        <tbody>
-                            <tr>
-                                <td align="center">
-                                    <img src="https://img2.pic.in.th/pic/Picture155db830009334f28.png" width="600" alt="Header Image">
-                                    <img src="https://img5.pic.in.th/file/secure-sv1/Picture1ae93ae40cdd2734e.jpg" width="600" alt="Event Image">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td align="center">
-                                    <p style="font-size: 18px; font-weight: bold;">From CASHEERS For SIAM SONGKRAN MUSIC FESTIVAL 2025</p>
-                                    <p style="font-size: 14px;">Thank you for being a part of SIAM Songkran Music Festival 2025! 🎉</p>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </td>
+              <td align="center">
+                <img src="https://img2.pic.in.th/pic/Picture155db830009334f28.png" width="600" alt="Header Image">
+                <img src="https://img5.pic.in.th/file/secure-sv1/Picture1ae93ae40cdd2734e.jpg" width="600" alt="Event Image">
+              </td>
             </tr>
-        </tbody>
-    </table>
-
-    <!-- Footer Section -->
-    <table style="background-color: #f97316; color: #ffffff; width: 100%; border-collapse: collapse;" cellspacing="0" cellpadding="0">
-        <tbody>
             <tr>
-                <td align="center" style="padding: 1rem 0;">
-                    <h2 style="font-size: 1.25rem; font-weight: bold; margin-bottom: 1rem;">DOWNLOAD CASHEERS APP</h2>
-                    <div>
-                        <a href="https://apps.apple.com/th/app/casheers/id1620837410" target="_blank" style="text-decoration: none; color: inherit;">
-                            <img style="height: 2rem; border: none;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/7vq/fe0/51o/New%20Project%20%281%29.png" alt="App Store">
-                        </a>
-                        <a href="https://play.google.com/store/apps/details?id=com.casheers.events" target="_blank" style="text-decoration: none; color: inherit;">
-                            <img style="height: 2rem; border: none;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/wpc/v5t/mtl/New%20Project.png" alt="Google Play">
-                        </a>
-                    </div>
-                    <div>
-                        <a href="https://www.facebook.com/Casheers" target="_blank" style="text-decoration: none; color: inherit;">
-                            <img style="height: 1.5rem; border: none;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/t4s/43l/0vm/Facebook_Icon.png" alt="Facebook">
-                        </a>
-                        <a href="https://www.instagram.com/casheers_th" target="_blank" style="text-decoration: none; color: inherit;">
-                            <img style="height: 1.5rem; border: none;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/xp8/0mo/kn8/Instagram_Icon.png" alt="Instagram">
-                        </a>
-                        <a href="https://x.com/casheers_th" target="_blank" style="text-decoration: none; color: inherit;">
-                            <img style="height: 1.5rem; border: none;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/gom/n3z/x0d/X_Icon.png" alt="Twitter">
-                        </a>
-                        <a href="https://www.tiktok.com/@casheers" target="_blank" style="text-decoration: none; color: inherit;">
-                            <img style="height: 1.5rem; border: none;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/gs4/yor/wku/Tiktok_Icon.png" alt="TikTok">
-                        </a>
-                    </div>
-                    <p style="font-size: 1rem; font-weight: bold;">
-                        หากคุณมีข้อติดต่อสอบถามเพิ่มเติม<br />
-                        ติดต่อเรา <a href="https://casheers.com/" style="text-decoration: none; color: inherit;">https://casheers.com/</a>
-                    </p>
-                </td>
+              <td align="center">
+                [content]
+              </td>
             </tr>
-        </tbody>
-    </table>
-</body>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
-</html>
+<!-- Footer Section -->
+<table style="background-color: #f97316; color: #ffffff; width: 100%; border-collapse: collapse;" cellspacing="0" cellpadding="0">
+  <tbody>
+    <tr>
+      <td align="center" style="padding: 1rem 0;">
+        <h2 style="font-size: 1rem; font-weight: bold; margin-bottom: 1rem;">DOWNLOAD CASHEERS APP</h2>
+        <div>
+          <a href="https://apps.apple.com/th/app/casheers/id1620837410" target="_blank" style="text-decoration: none; color: inherit;" rel="noopener">
+            <img style="height: 2rem; border: none;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/7vq/fe0/51o/New%20Project%20%281%29.png" alt="App Store">
+          </a>
+          <a href="https://play.google.com/store/apps/details?id=com.casheers.events" target="_blank" style="text-decoration: none; color: inherit;" rel="noopener">
+            <img style="height: 2rem; border: none;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/wpc/v5t/mtl/New%20Project.png" alt="Google Play">
+          </a>
+        </div>
+        <div>
+          <a href="https://www.facebook.com/Casheers" target="_blank" style="text-decoration: none; color: inherit;" rel="noopener">
+            <img style="height: 1.5rem; border: none;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/t4s/43l/0vm/Facebook_Icon.png" alt="Facebook">
+          </a>
+          <a href="https://www.instagram.com/casheers_th" target="_blank" style="text-decoration: none; color: inherit;" rel="noopener">
+            <img style="height: 1.5rem; border: none;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/xp8/0mo/kn8/Instagram_Icon.png" alt="Instagram">
+          </a>
+          <a href="https://x.com/casheers_th" target="_blank" style="text-decoration: none; color: inherit;" rel="noopener">
+            <img style="height: 1.5rem; border: none;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/gom/n3z/x0d/X_Icon.png" alt="Twitter">
+          </a>
+          <a href="https://www.tiktok.com/@casheers" target="_blank" style="text-decoration: none; color: inherit;" rel="noopener">
+            <img style="height: 1.5rem; border: none;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/gs4/yor/wku/Tiktok_Icon.png" alt="TikTok">
+          </a>
+        </div>
+        <p style="font-size: 0.75rem; font-weight: bold;">
+          หากคุณมีข้อติดต่อสอบถามเพิ่มเติม<br>ติดต่อเรา <a href="https://casheers.com/" style="text-decoration: none; color: inherit;">https://casheers.com/</a>
+        </p>
+      </td>
+    </tr>
+  </tbody>
+</table>
 `,
   });
 
@@ -275,95 +245,65 @@ export default function NewProjectDialog({ open, onClose }) {
       subject: "",
       emails: "",
       googleSheetLink: "",
-      template: `<!DOCTYPE html>
-<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" lang="en">
-
-<head>
-    <title></title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            padding: 0;
-        }
-
-        a[x-apple-data-detectors], a {
-            color: inherit !important;
-            text-decoration: none !important;
-        }
-    </style>
-</head>
-
-<body style="background-color: #ffffff; margin: 0; padding: 0;">
-    <table width="100%" border="0" cellpadding="0" cellspacing="0" style="background-color: #ffffff;">
-        <tbody>
+      template: `<table width="100%" border="0" cellpadding="0" cellspacing="0" style="background-color: #ffffff;">
+  <tbody>
+    <tr>
+      <td>
+        <table align="center" width="600" border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto;">
+          <tbody>
             <tr>
-                <td>
-                    <table align="center" width="600" border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto;">
-                        <tbody>
-                            <tr>
-                                <td align="center">
-                                    <img src="https://img2.pic.in.th/pic/Picture155db830009334f28.png" width="600" alt="Header Image">
-                                    <img src="https://img5.pic.in.th/file/secure-sv1/Picture1ae93ae40cdd2734e.jpg" width="600" alt="Event Image">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td align="center">
-                                    <p style="font-size: 18px; font-weight: bold;">From CASHEERS For SIAM SONGKRAN MUSIC FESTIVAL 2025</p>
-                                    <p style="font-size: 14px;">Thank you for being a part of SIAM Songkran Music Festival 2025! 🎉</p>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </td>
+              <td align="center">
+                <img src="https://img2.pic.in.th/pic/Picture155db830009334f28.png" width="600" alt="Header Image">
+                <img src="https://img5.pic.in.th/file/secure-sv1/Picture1ae93ae40cdd2734e.jpg" width="600" alt="Event Image">
+              </td>
             </tr>
-        </tbody>
-    </table>
-
-    <!-- Footer Section -->
-    <table style="background-color: #f97316; color: #ffffff; width: 100%; border-collapse: collapse;" cellspacing="0" cellpadding="0">
-        <tbody>
             <tr>
-                <td align="center" style="padding: 1rem 0;">
-                    <h2 style="font-size: 1.25rem; font-weight: bold; margin-bottom: 1rem;">DOWNLOAD CASHEERS APP</h2>
-                    <div>
-                        <a href="https://apps.apple.com/th/app/casheers/id1620837410" target="_blank" style="text-decoration: none; color: inherit;">
-                            <img style="height: 2rem; border: none;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/7vq/fe0/51o/New%20Project%20%281%29.png" alt="App Store">
-                        </a>
-                        <a href="https://play.google.com/store/apps/details?id=com.casheers.events" target="_blank" style="text-decoration: none; color: inherit;">
-                            <img style="height: 2rem; border: none;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/wpc/v5t/mtl/New%20Project.png" alt="Google Play">
-                        </a>
-                    </div>
-                    <div>
-                        <a href="https://www.facebook.com/Casheers" target="_blank" style="text-decoration: none; color: inherit;">
-                            <img style="height: 1.5rem; border: none;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/t4s/43l/0vm/Facebook_Icon.png" alt="Facebook">
-                        </a>
-                        <a href="https://www.instagram.com/casheers_th" target="_blank" style="text-decoration: none; color: inherit;">
-                            <img style="height: 1.5rem; border: none;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/xp8/0mo/kn8/Instagram_Icon.png" alt="Instagram">
-                        </a>
-                        <a href="https://x.com/casheers_th" target="_blank" style="text-decoration: none; color: inherit;">
-                            <img style="height: 1.5rem; border: none;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/gom/n3z/x0d/X_Icon.png" alt="Twitter">
-                        </a>
-                        <a href="https://www.tiktok.com/@casheers" target="_blank" style="text-decoration: none; color: inherit;">
-                            <img style="height: 1.5rem; border: none;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/gs4/yor/wku/Tiktok_Icon.png" alt="TikTok">
-                        </a>
-                    </div>
-                    <p style="font-size: 1rem; font-weight: bold;">
-                        หากคุณมีข้อติดต่อสอบถามเพิ่มเติม<br />
-                        ติดต่อเรา <a href="https://casheers.com/" style="text-decoration: none; color: inherit;">https://casheers.com/</a>
-                    </p>
-                </td>
+              <td align="center">
+                [content]
+              </td>
             </tr>
-        </tbody>
-    </table>
-</body>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
-</html>`,
+<!-- Footer Section -->
+<table style="background-color: #f97316; color: #ffffff; width: 100%; border-collapse: collapse;" cellspacing="0" cellpadding="0">
+  <tbody>
+    <tr>
+      <td align="center" style="padding: 1rem 0;">
+        <h2 style="font-size: 1rem; font-weight: bold; margin-bottom: 1rem;">DOWNLOAD CASHEERS APP</h2>
+        <div>
+          <a href="https://apps.apple.com/th/app/casheers/id1620837410" target="_blank" style="text-decoration: none; color: inherit;" rel="noopener">
+            <img style="height: 2rem; border: none;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/7vq/fe0/51o/New%20Project%20%281%29.png" alt="App Store">
+          </a>
+          <a href="https://play.google.com/store/apps/details?id=com.casheers.events" target="_blank" style="text-decoration: none; color: inherit;" rel="noopener">
+            <img style="height: 2rem; border: none;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/wpc/v5t/mtl/New%20Project.png" alt="Google Play">
+          </a>
+        </div>
+        <div>
+          <a href="https://www.facebook.com/Casheers" target="_blank" style="text-decoration: none; color: inherit;" rel="noopener">
+            <img style="height: 1.5rem; border: none;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/t4s/43l/0vm/Facebook_Icon.png" alt="Facebook">
+          </a>
+          <a href="https://www.instagram.com/casheers_th" target="_blank" style="text-decoration: none; color: inherit;" rel="noopener">
+            <img style="height: 1.5rem; border: none;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/xp8/0mo/kn8/Instagram_Icon.png" alt="Instagram">
+          </a>
+          <a href="https://x.com/casheers_th" target="_blank" style="text-decoration: none; color: inherit;" rel="noopener">
+            <img style="height: 1.5rem; border: none;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/gom/n3z/x0d/X_Icon.png" alt="Twitter">
+          </a>
+          <a href="https://www.tiktok.com/@casheers" target="_blank" style="text-decoration: none; color: inherit;" rel="noopener">
+            <img style="height: 1.5rem; border: none;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/gs4/yor/wku/Tiktok_Icon.png" alt="TikTok">
+          </a>
+        </div>
+        <p style="font-size: 0.75rem; font-weight: bold;">
+          หากคุณมีข้อติดต่อสอบถามเพิ่มเติม<br>ติดต่อเรา <a href="https://casheers.com/" style="text-decoration: none; color: inherit;">https://casheers.com/</a>
+        </p>
+      </td>
+    </tr>
+  </tbody>
+</table>`,
     });
     setNotification({
       open: false,
@@ -1006,18 +946,23 @@ export default function NewProjectDialog({ open, onClose }) {
                     // Email-friendly content styles
                     content_style:
                       "body { font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 1.5; } " +
-                      "p { margin: 0 0 1em 0; } " +
+                      "div { margin: 0 0 1em 0; } " +
                       "table { border-collapse: collapse; } " +
                       "table td, table th { border: 1px solid #ddd; padding: 8px; } " +
                       "img { max-width: 100%; height: auto; } " +
                       ".mce-content-body [data-mce-selected=inline-boundary] { background-color: transparent; }",
                     // Email-specific settings
-                    forced_root_block: "p",
+                    forced_root_block: "div",
                     remove_trailing_brs: false,
-                    paste_as_text: true,
+                    paste_as_text: false,
+                    paste_block_drop: false,
+                    paste_data_images: true,
+                    paste_merge_formats: true,
+                    paste_webkit_styles: "all",
+                    paste_retain_style_properties: "all",
                     convert_urls: false,
                     valid_elements: "*[*]", // Allow all elements and attributes
-                    extended_valid_elements: "style,link[href|rel]",
+                    extended_valid_elements: "style,link[href|rel],div[*],span[*],br[*]",
                     entity_encoding: "raw",
                     // Ensure newlines are preserved
                     newline_behavior: "block",
