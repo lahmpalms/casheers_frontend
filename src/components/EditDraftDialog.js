@@ -548,21 +548,16 @@ export default function EditDraftDialog({ open, onClose, projectId }) {
                         img { max-width: 100%; height: auto; }
                         .mce-content-body [data-mce-selected=inline-boundary] { background-color: transparent; }
                       `,
-                      // Force <br> instead of <p> for Enter key
-                      forced_root_block: false,
-                      force_br_newlines: true,
-                      force_p_newlines: false,
-                      // Convert CSS units to px
-                      convert_fonts_to_spans: true,
-                      // Paste as text by default to avoid Word/external formatting issues
-                      paste_as_text: false,
-                      // Automatically convert URLs to links
-                      convert_urls: false,
-                      // Don't remove empty paragraphs (helps with spacing)
-                      keep_styles: true,
                       // Email-specific settings
+                      forced_root_block: "p",
+                      remove_trailing_brs: false,
+                      paste_as_text: false,
+                      convert_urls: false,
                       valid_elements: '*[*]', // Allow all elements and attributes
                       extended_valid_elements: 'style,link[href|rel]',
+                      entity_encoding: 'raw',
+                      // Ensure newlines are preserved
+                      newline_behavior: "block",
                     }}
                   />
                 </Box>

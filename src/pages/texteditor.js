@@ -67,7 +67,7 @@ function TextEditor() {
                 body { 
                   font-family: Arial, Helvetica, sans-serif; 
                   font-size: 14px;
-                  line-height: 1.5;
+                  line-height: 1.2;
                   margin: 0;
                   padding: 16px;
                 }
