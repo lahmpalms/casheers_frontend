@@ -73,7 +73,7 @@ export default function NewProjectDialog({ open, onClose }) {
   const [projectId, setProjectId] = useState(null);
   const [recipientsData, setRecipientsData] = useState(null);
   const [projectProgress, setProjectProgress] = useState(null);
-  
+
   // Tutorial state variables
   const [tutorialOpen, setTutorialOpen] = useState(false);
   const [activeSlide, setActiveSlide] = useState(0);
@@ -86,43 +86,16 @@ export default function NewProjectDialog({ open, onClose }) {
     emails: "",
     googleSheetLink: "",
     template: `<p class="MsoNormal" style="text-align: center;" align="center"><span lang="EN" style="font-size: 26.0pt; line-height: 115%;"><img src="https://img5.pic.in.th/file/secure-sv1/Picture1ae93ae40cdd2734e.jpg" alt="" width="926" height="268"></span><span lang="EN" style="font-size: 26.0pt; line-height: 115%;"><img src="https://img2.pic.in.th/pic/Picture155db830009334f28.png" alt="" width="928" height="154"></span></p>
-<p class="MsoNormal" style="text-align: center;" align="center"><span lang="EN" style="font-size: 26.0pt; line-height: 115%;">Skip The Line</span></p>
-<p class="MsoNormal" style="text-align: center;" align="center"><span lang="EN" style="font-size: 26.0pt; line-height: 115%;">For SIAM Songkran people<br style="mso-special-character: line-break;"><!-- [if !supportLineBreakNewLine]--><br style="mso-special-character: line-break;"><!--[endif]--></span></p>
-<p class="MsoNormal" style="text-align: center;" align="center"><span lang="EN" style="font-size: 16.0pt; line-height: 115%;">Get Your SIAM Songkran Wristband </span></p>
-<p class="MsoNormal" style="text-align: center;" align="center"><span lang="EN" style="font-size: 16.0pt; line-height: 115%;">Delivered to Your Home Before the Event!<br><br></span><span lang="EN">We are offering free wristband delivery directly to your home! (Shipping only within Thailand)<br><br><strong style="mso-bidi-font-weight: normal;">Simply click the link below and fill in your delivery information, and we will send your wristband to you before the event!</strong></span></p>
-<p class="MsoNormal" style="text-align: center; margin: 12.0pt 0cm 12.0pt 0cm;" align="center"><strong style="mso-bidi-font-weight: normal;"><span lang="EN">&nbsp;</span></strong></p>
-<p class="MsoNormal" style="text-align: center; margin: 12.0pt 0cm 12.0pt 0cm;" align="center"><span lang="EN">👉 <strong style="mso-bidi-font-weight: normal;">[</strong><a href="https://forms.gle/sg2HRW5Z82oUd7Rw7"><strong style="mso-bidi-font-weight: normal;"><span style="color: #1155cc;">Enter Shipping Info Here</span></strong></a><strong style="mso-bidi-font-weight: normal;">]</strong></span></p>
-<p class="MsoNormal" style="text-align: center; margin: 12.0pt 0cm 12.0pt 0cm;" align="center"><strong style="mso-bidi-font-weight: normal;"><span lang="EN">&nbsp;</span></strong></p>
-<p class="MsoNormal" style="text-align: center; margin: 12.0pt 0cm 12.0pt 0cm;" align="center"><strong style="mso-bidi-font-weight: normal;"><span lang="EN">Why receive your wristband at home?</span></strong></p>
-<p class="MsoNormal" style="text-indent: -18.0pt; mso-list: l0 level1 lfo2; margin: 12.0pt 0cm .0001pt 36.0pt;"><!-- [if !supportLists]--><span style="mso-list: Ignore;">●<span style="font: 7.0pt 'Times New Roman';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><!--[endif]--><span lang="EN">Quick and easy. No need to stand in line at the event to pick up your wristband</span></p>
-<p class="MsoNormal" style="text-indent: -18.0pt; mso-list: l0 level1 lfo2; margin: 0cm 0cm 12.0pt 36.0pt;"><!-- [if !supportLists]--><span style="mso-list: Ignore;">●<span style="font: 7.0pt 'Times New Roman';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><!--[endif]--><span lang="EN">Receive your wristband in advance and be ready for the event</span></p>
-<p class="MsoNormal" style="text-align: center; margin: 12.0pt 0cm 12.0pt 0cm;" align="center"><span lang="EN">If you have any questions or need assistance, feel free to reach out to us via this email.</span></p>
-<p class="MsoNormal" style="text-align: center; margin: 12.0pt 0cm 12.0pt 0cm;" align="center"><span lang="EN">&nbsp;</span></p>
-<p class="MsoNormal" style="text-align: center; margin: 12.0pt 0cm 12.0pt 0cm;" align="center"><strong style="mso-bidi-font-weight: normal;"><span lang="EN">**Please complete the form by February 19, 2025.**</span></strong></p>
-<p class="MsoNormal" style="text-align: center; margin: 12.0pt 0cm 12.0pt 0cm;" align="center"><strong style="mso-bidi-font-weight: normal;"><span lang="EN">Thank you for choosing CASHEERS,<br><span style="mso-spacerun: yes;">&nbsp;</span>and we hope you have an unforgettable experience at the event!</span></strong></p>
-<p class="MsoNormal" style="text-align: center;" align="center"><span lang="EN">&nbsp;</span></p>
-<p class="MsoNormal" style="text-align: center;" align="center"><span lang="EN">&nbsp;</span></p>
-<p class="MsoNormal" style="text-align: center; margin: 12.0pt 0cm 12.0pt 0cm;" align="center"><span lang="EN" style="font-family: 'Arial Unicode MS',sans-serif;">เพื่อให้การเตรียมตัวสำหรับงานเทศกาลของคุณสะดวกสบายยิ่งขึ้น เรามีบริการจัดส่งริสแบนด์ถึงบ้าน ฟรี!</span></p>
-<p class="MsoNormal" style="text-align: center; margin: 12.0pt 0cm 12.0pt 0cm;" align="center"><strong style="mso-bidi-font-weight: normal;"><span lang="EN" style="font-family: 'Arial Unicode MS',sans-serif;">(จัดส่งในประเทศไทยเท่านั้น) </span></strong><span lang="EN" style="font-family: 'Arial Unicode MS',sans-serif;">เพียงคลิกที่ลิงก์ด้านล่างและกรอกข้อมูลจัดส่งของคุณ เราจะส่งริสแบนด์ถึงมือคุณก่อนวันงาน!</span></p>
-<p class="MsoNormal" style="text-align: center; margin: 12.0pt 0cm 12.0pt 0cm;" align="center"><span lang="EN">&nbsp;</span></p>
-<p class="MsoNormal" style="text-align: center; margin: 12.0pt 0cm 12.0pt 0cm;" align="center"><span lang="EN">👉 <strong style="mso-bidi-font-weight: normal;">[</strong><a href="https://forms.gle/sg2HRW5Z82oUd7Rw7"><strong style="mso-bidi-font-weight: normal;"><span style="color: #1155cc;">กรอกข้อมูลจัดส่งที่นี่</span></strong></a><strong style="mso-bidi-font-weight: normal;">]</strong></span></p>
-<p class="MsoNormal" style="text-align: center; margin: 12.0pt 0cm 12.0pt 0cm;" align="center"><strong style="mso-bidi-font-weight: normal;"><span lang="EN">&nbsp;</span></strong></p>
-<p class="MsoNormal" style="text-align: center; margin: 12.0pt 0cm 12.0pt 0cm;" align="center"><strong style="mso-bidi-font-weight: normal;"><span lang="EN" style="font-family: 'Arial Unicode MS',sans-serif;">ทำไมถึงต้องรับริสแบนด์ที่บ้าน?</span></strong></p>
-<p class="MsoNormal" style="text-indent: -18.0pt; mso-list: l1 level1 lfo1; margin: 12.0pt 0cm .0001pt 36.0pt;"><!-- [if !supportLists]--><span style="mso-list: Ignore;">●<span style="font: 7.0pt 'Times New Roman';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><!--[endif]--><span lang="EN" style="font-family: 'Arial Unicode MS',sans-serif;">สะดวกและรวดเร็ว ไม่ต้องยืนรอต่อแถวรับริสแบนด์ที่งาน</span></p>
-<p class="MsoNormal" style="text-indent: -18.0pt; mso-list: l1 level1 lfo1; margin: 0cm 0cm 12.0pt 36.0pt;"><!-- [if !supportLists]--><span style="mso-list: Ignore;">●<span style="font: 7.0pt 'Times New Roman';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><!--[endif]--><span lang="EN" style="font-family: 'Arial Unicode MS',sans-serif;">รับริสแบนด์ล่วงหน้าและเตรียมตัวให้พร้อมสำหรับงาน</span></p>
-<p class="MsoNormal" style="text-align: center;" align="center"><strong style="mso-bidi-font-weight: normal;"><span lang="EN">&nbsp;</span></strong></p>
-<p class="MsoNormal" style="text-align: center;" align="center"><strong style="mso-bidi-font-weight: normal;"><span lang="EN" style="font-family: 'Arial Unicode MS',sans-serif;">**กรุณากรอกรายละเอียดภายในวันที่ 19 กุมภาพันธ์ 2568**</span></strong></p>
-<p class="MsoNormal" style="text-align: center;" align="center"><strong style="mso-bidi-font-weight: normal;"><span lang="EN">&nbsp;</span></strong></p>
-<p class="MsoNormal" style="text-align: center;" align="center"><strong style="mso-bidi-font-weight: normal;"><span lang="EN" style="font-family: 'Arial Unicode MS',sans-serif;">ขอบคุณที่เลือกใช้บริการ CASHEERS ขอให้คุณมีประสบการณ์ที่น่าจดจำและเต็มไปด้วยความประทับใจในงานครั้งนี้!</span></strong></p>
+<div class="MsoNormal" style="text-align:center;">[Content Here]</div>
 <!-- Footer Section -->
 <table style="background-color: #f97316; color: #ffffff; margin: 0; padding: 0; border-collapse: collapse;" width="100%" cellspacing="0" cellpadding="0">
 <tbody>
 <tr>
 <td align="center"><footer style="text-align: center; padding: 1rem 0;">
-<h2 style="font-size: 0.75rem; font-weight: bold; margin-bottom: 1rem;">DOWNLOAD CASHEERS APP</h2>
-<div style="margin-bottom: 1.5rem;"><a style="margin: 0 0.5rem;" href="https://apps.apple.com/th/app/casheers/id1620837410" target="_blank" rel="noopener"> <img style="height: 2rem;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/7vq/fe0/51o/New%20Project%20%281%29.png" alt="Download on the App Store"> </a> <a style="margin: 0 0.5rem;" href="https://play.google.com/store/apps/details?id=com.casheers.events&amp;pcampaignid=web_share&amp;pli=1" target="_blank" rel="noopener"> <img style="height: 2rem;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/wpc/v5t/mtl/New%20Project.png" alt="Get it on Google Play"> </a></div>
-<div style="margin-bottom: 1.5rem;"><a style="margin: 0 0.5rem;" href="https://www.facebook.com/Casheers" target="_blank" rel="noopener"> <img style="height: 1.5rem;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/t4s/43l/0vm/Facebook_Icon.png" alt="Facebook"> </a> <a style="margin: 0 0.5rem;" href="https://www.instagram.com/casheers_th?igsh=dWg5enE1cGI4NXN1" target="_blank" rel="noopener"> <img style="height: 1.5rem;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/xp8/0mo/kn8/Instagram_Icon.png" alt="Instagram"> </a> <a style="margin: 0 0.5rem;" href="https://x.com/casheers_th" target="_blank" rel="noopener"> <img style="height: 1.5rem;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/gom/n3z/x0d/X_Icon.png" alt="Twitter"> </a> <a style="margin: 0 0.5rem;" href="https://www.tiktok.com/@casheers?_t=8obpTmGjBll&amp;_r=1" target="_blank" rel="noopener"> <img style="height: 1.5rem;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/gs4/yor/wku/Tiktok_Icon.png" alt="TikTok"> </a></div>
-<p style="font-size: 0.5rem; font-weight: bold;">หากคุณมีข้อข้อติดต่อสอบถามเพิ่มเติม<br>ติดต่อเรา <a style="color: #ffffff; text-decoration: underline;" href="https://casheers.com/">https://casheers.com/</a></p>
+<h2 style="font-size: 1.25rem; font-weight: bold; margin-bottom: 1rem;">DOWNLOAD CASHEERS APP</h2>
+<div style="margin-bottom: 2rem;"><a style="margin: 0 0.5rem;" href="https://apps.apple.com/th/app/casheers/id1620837410" target="_blank" rel="noopener"> <img style="height: 2rem;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/7vq/fe0/51o/New%20Project%20%281%29.png" alt="Download on the App Store"> </a> <a style="margin: 0 0.5rem;" href="https://play.google.com/store/apps/details?id=com.casheers.events&amp;pcampaignid=web_share&amp;pli=1" target="_blank" rel="noopener"> <img style="height: 2rem;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/wpc/v5t/mtl/New%20Project.png" alt="Get it on Google Play"> </a></div>
+<div style="margin-bottom: 2rem;"><a style="margin: 0 0.5rem;" href="https://www.facebook.com/Casheers" target="_blank" rel="noopener"> <img style="height: 1.5rem;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/t4s/43l/0vm/Facebook_Icon.png" alt="Facebook"> </a> <a style="margin: 0 0.5rem;" href="https://www.instagram.com/casheers_th?igsh=dWg5enE1cGI4NXN1" target="_blank" rel="noopener"> <img style="height: 1.5rem;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/xp8/0mo/kn8/Instagram_Icon.png" alt="Instagram"> </a> <a style="margin: 0 0.5rem;" href="https://x.com/casheers_th" target="_blank" rel="noopener"> <img style="height: 1.5rem;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/gom/n3z/x0d/X_Icon.png" alt="Twitter"> </a> <a style="margin: 0 0.5rem;" href="https://www.tiktok.com/@casheers?_t=8obpTmGjBll&amp;_r=1" target="_blank" rel="noopener"> <img style="height: 1.5rem;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/gs4/yor/wku/Tiktok_Icon.png" alt="TikTok"> </a></div>
+<p style="font-size: 1rem; font-weight: bold;">หากคุณมีข้อข้อติดต่อสอบถามเพิ่มเติม<br>ติดต่อเรา <a style="color: #ffffff; text-decoration: underline;" href="https://casheers.com/">https://casheers.com/</a></p>
 </footer></td>
 </tr>
 </tbody>
@@ -140,23 +113,30 @@ export default function NewProjectDialog({ open, onClose }) {
     () => [
       {
         label: "Data requirement",
-        imgPath: "https://img2.pic.in.th/pic/Screenshot-2568-03-12-at-17.26.38.png",
-        description: "The file should have a column with email addresses."
+        imgPath:
+          "https://img2.pic.in.th/pic/Screenshot-2568-03-12-at-17.26.38.png",
+        description: "The file should have a column with email addresses.",
       },
       {
         label: "Access to Google Sheet requirement",
-        imgPath: "https://img5.pic.in.th/file/secure-sv1/Screenshot-2568-03-12-at-17.30.42.png",
-        description: "This step is give access to Google Sheet to this email address `emailservice@casheer-email.iam.gserviceaccount.com`"
+        imgPath:
+          "https://img5.pic.in.th/file/secure-sv1/Screenshot-2568-03-12-at-17.30.42.png",
+        description:
+          "This step is give access to Google Sheet to this email address `emailservice@casheer-email.iam.gserviceaccount.com`",
       },
       {
         label: "Access to Google Sheet requirement",
-        imgPath: "https://img2.pic.in.th/pic/Screenshot-2568-03-12-at-17.30.52.png",
-        description: "This step is give access to Google Sheet to this email address `emailservice@casheer-email.iam.gserviceaccount.com`"
+        imgPath:
+          "https://img2.pic.in.th/pic/Screenshot-2568-03-12-at-17.30.52.png",
+        description:
+          "This step is give access to Google Sheet to this email address `emailservice@casheer-email.iam.gserviceaccount.com`",
       },
       {
         label: "Access to Google Sheet requirement",
-        imgPath: "https://img2.pic.in.th/pic/Screenshot-2568-03-12-at-17.31.15.png",
-        description: "This step is give access to Google Sheet to this email address `emailservice@casheer-email.iam.gserviceaccount.com`"
+        imgPath:
+          "https://img2.pic.in.th/pic/Screenshot-2568-03-12-at-17.31.15.png",
+        description:
+          "This step is give access to Google Sheet to this email address `emailservice@casheer-email.iam.gserviceaccount.com`",
       },
     ],
     []
@@ -182,7 +162,9 @@ export default function NewProjectDialog({ open, onClose }) {
 
   // Copy to clipboard handler
   const handleCopyToClipboard = () => {
-    navigator.clipboard.writeText("emailservice@casheer-email.iam.gserviceaccount.com");
+    navigator.clipboard.writeText(
+      "emailservice@casheer-email.iam.gserviceaccount.com"
+    );
     setCopied(true);
     setTimeout(() => {
       setCopied(false);
@@ -191,7 +173,10 @@ export default function NewProjectDialog({ open, onClose }) {
 
   // Download example file handler
   const handleDownloadExample = () => {
-    window.open("https://docs.google.com/spreadsheets/d/1NWphpsRazGMeEQWKN2Ft2sPLJQJfqOtI/edit?usp=sharing&ouid=115139448074908525703&rtpof=true&sd=true", "_blank");
+    window.open(
+      "https://docs.google.com/spreadsheets/d/1NWphpsRazGMeEQWKN2Ft2sPLJQJfqOtI/edit?usp=sharing&ouid=115139448074908525703&rtpof=true&sd=true",
+      "_blank"
+    );
   };
 
   // Reset function to clear all states
@@ -216,43 +201,16 @@ export default function NewProjectDialog({ open, onClose }) {
       emails: "",
       googleSheetLink: "",
       template: `<p class="MsoNormal" style="text-align: center;" align="center"><span lang="EN" style="font-size: 26.0pt; line-height: 115%;"><img src="https://img5.pic.in.th/file/secure-sv1/Picture1ae93ae40cdd2734e.jpg" alt="" width="926" height="268"></span><span lang="EN" style="font-size: 26.0pt; line-height: 115%;"><img src="https://img2.pic.in.th/pic/Picture155db830009334f28.png" alt="" width="928" height="154"></span></p>
-<p class="MsoNormal" style="text-align: center;" align="center"><span lang="EN" style="font-size: 26.0pt; line-height: 115%;">Skip The Line</span></p>
-<p class="MsoNormal" style="text-align: center;" align="center"><span lang="EN" style="font-size: 26.0pt; line-height: 115%;">For SIAM Songkran people<br style="mso-special-character: line-break;"><!-- [if !supportLineBreakNewLine]--><br style="mso-special-character: line-break;"><!--[endif]--></span></p>
-<p class="MsoNormal" style="text-align: center;" align="center"><span lang="EN" style="font-size: 16.0pt; line-height: 115%;">Get Your SIAM Songkran Wristband </span></p>
-<p class="MsoNormal" style="text-align: center;" align="center"><span lang="EN" style="font-size: 16.0pt; line-height: 115%;">Delivered to Your Home Before the Event!<br><br></span><span lang="EN">We are offering free wristband delivery directly to your home! (Shipping only within Thailand)<br><br><strong style="mso-bidi-font-weight: normal;">Simply click the link below and fill in your delivery information, and we will send your wristband to you before the event!</strong></span></p>
-<p class="MsoNormal" style="text-align: center; margin: 12.0pt 0cm 12.0pt 0cm;" align="center"><strong style="mso-bidi-font-weight: normal;"><span lang="EN">&nbsp;</span></strong></p>
-<p class="MsoNormal" style="text-align: center; margin: 12.0pt 0cm 12.0pt 0cm;" align="center"><span lang="EN">👉 <strong style="mso-bidi-font-weight: normal;">[</strong><a href="https://forms.gle/sg2HRW5Z82oUd7Rw7"><strong style="mso-bidi-font-weight: normal;"><span style="color: #1155cc;">Enter Shipping Info Here</span></strong></a><strong style="mso-bidi-font-weight: normal;">]</strong></span></p>
-<p class="MsoNormal" style="text-align: center; margin: 12.0pt 0cm 12.0pt 0cm;" align="center"><strong style="mso-bidi-font-weight: normal;"><span lang="EN">&nbsp;</span></strong></p>
-<p class="MsoNormal" style="text-align: center; margin: 12.0pt 0cm 12.0pt 0cm;" align="center"><strong style="mso-bidi-font-weight: normal;"><span lang="EN">Why receive your wristband at home?</span></strong></p>
-<p class="MsoNormal" style="text-indent: -18.0pt; mso-list: l0 level1 lfo2; margin: 12.0pt 0cm .0001pt 36.0pt;"><!-- [if !supportLists]--><span style="mso-list: Ignore;">●<span style="font: 7.0pt 'Times New Roman';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><!--[endif]--><span lang="EN">Quick and easy. No need to stand in line at the event to pick up your wristband</span></p>
-<p class="MsoNormal" style="text-indent: -18.0pt; mso-list: l0 level1 lfo2; margin: 0cm 0cm 12.0pt 36.0pt;"><!-- [if !supportLists]--><span style="mso-list: Ignore;">●<span style="font: 7.0pt 'Times New Roman';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><!--[endif]--><span lang="EN">Receive your wristband in advance and be ready for the event</span></p>
-<p class="MsoNormal" style="text-align: center; margin: 12.0pt 0cm 12.0pt 0cm;" align="center"><span lang="EN">If you have any questions or need assistance, feel free to reach out to us via this email.</span></p>
-<p class="MsoNormal" style="text-align: center; margin: 12.0pt 0cm 12.0pt 0cm;" align="center"><span lang="EN">&nbsp;</span></p>
-<p class="MsoNormal" style="text-align: center; margin: 12.0pt 0cm 12.0pt 0cm;" align="center"><strong style="mso-bidi-font-weight: normal;"><span lang="EN">**Please complete the form by February 19, 2025.**</span></strong></p>
-<p class="MsoNormal" style="text-align: center; margin: 12.0pt 0cm 12.0pt 0cm;" align="center"><strong style="mso-bidi-font-weight: normal;"><span lang="EN">Thank you for choosing CASHEERS,<br><span style="mso-spacerun: yes;">&nbsp;</span>and we hope you have an unforgettable experience at the event!</span></strong></p>
-<p class="MsoNormal" style="text-align: center;" align="center"><span lang="EN">&nbsp;</span></p>
-<p class="MsoNormal" style="text-align: center;" align="center"><span lang="EN">&nbsp;</span></p>
-<p class="MsoNormal" style="text-align: center; margin: 12.0pt 0cm 12.0pt 0cm;" align="center"><span lang="EN" style="font-family: 'Arial Unicode MS',sans-serif;">เพื่อให้การเตรียมตัวสำหรับงานเทศกาลของคุณสะดวกสบายยิ่งขึ้น เรามีบริการจัดส่งริสแบนด์ถึงบ้าน ฟรี!</span></p>
-<p class="MsoNormal" style="text-align: center; margin: 12.0pt 0cm 12.0pt 0cm;" align="center"><strong style="mso-bidi-font-weight: normal;"><span lang="EN" style="font-family: 'Arial Unicode MS',sans-serif;">(จัดส่งในประเทศไทยเท่านั้น) </span></strong><span lang="EN" style="font-family: 'Arial Unicode MS',sans-serif;">เพียงคลิกที่ลิงก์ด้านล่างและกรอกข้อมูลจัดส่งของคุณ เราจะส่งริสแบนด์ถึงมือคุณก่อนวันงาน!</span></p>
-<p class="MsoNormal" style="text-align: center; margin: 12.0pt 0cm 12.0pt 0cm;" align="center"><span lang="EN">&nbsp;</span></p>
-<p class="MsoNormal" style="text-align: center; margin: 12.0pt 0cm 12.0pt 0cm;" align="center"><span lang="EN">👉 <strong style="mso-bidi-font-weight: normal;">[</strong><a href="https://forms.gle/sg2HRW5Z82oUd7Rw7"><strong style="mso-bidi-font-weight: normal;"><span style="color: #1155cc;">กรอกข้อมูลจัดส่งที่นี่</span></strong></a><strong style="mso-bidi-font-weight: normal;">]</strong></span></p>
-<p class="MsoNormal" style="text-align: center; margin: 12.0pt 0cm 12.0pt 0cm;" align="center"><strong style="mso-bidi-font-weight: normal;"><span lang="EN">&nbsp;</span></strong></p>
-<p class="MsoNormal" style="text-align: center; margin: 12.0pt 0cm 12.0pt 0cm;" align="center"><strong style="mso-bidi-font-weight: normal;"><span lang="EN" style="font-family: 'Arial Unicode MS',sans-serif;">ทำไมถึงต้องรับริสแบนด์ที่บ้าน?</span></strong></p>
-<p class="MsoNormal" style="text-indent: -18.0pt; mso-list: l1 level1 lfo1; margin: 12.0pt 0cm .0001pt 36.0pt;"><!-- [if !supportLists]--><span style="mso-list: Ignore;">●<span style="font: 7.0pt 'Times New Roman';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><!--[endif]--><span lang="EN" style="font-family: 'Arial Unicode MS',sans-serif;">สะดวกและรวดเร็ว ไม่ต้องยืนรอต่อแถวรับริสแบนด์ที่งาน</span></p>
-<p class="MsoNormal" style="text-indent: -18.0pt; mso-list: l1 level1 lfo1; margin: 0cm 0cm 12.0pt 36.0pt;"><!-- [if !supportLists]--><span style="mso-list: Ignore;">●<span style="font: 7.0pt 'Times New Roman';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><!--[endif]--><span lang="EN" style="font-family: 'Arial Unicode MS',sans-serif;">รับริสแบนด์ล่วงหน้าและเตรียมตัวให้พร้อมสำหรับงาน</span></p>
-<p class="MsoNormal" style="text-align: center;" align="center"><strong style="mso-bidi-font-weight: normal;"><span lang="EN">&nbsp;</span></strong></p>
-<p class="MsoNormal" style="text-align: center;" align="center"><strong style="mso-bidi-font-weight: normal;"><span lang="EN" style="font-family: 'Arial Unicode MS',sans-serif;">**กรุณากรอกรายละเอียดภายในวันที่ 19 กุมภาพันธ์ 2568**</span></strong></p>
-<p class="MsoNormal" style="text-align: center;" align="center"><strong style="mso-bidi-font-weight: normal;"><span lang="EN">&nbsp;</span></strong></p>
-<p class="MsoNormal" style="text-align: center;" align="center"><strong style="mso-bidi-font-weight: normal;"><span lang="EN" style="font-family: 'Arial Unicode MS',sans-serif;">ขอบคุณที่เลือกใช้บริการ CASHEERS ขอให้คุณมีประสบการณ์ที่น่าจดจำและเต็มไปด้วยความประทับใจในงานครั้งนี้!</span></strong></p>
+<div class="MsoNormal" style="text-align:center;">[Content Here]</div>
 <!-- Footer Section -->
 <table style="background-color: #f97316; color: #ffffff; margin: 0; padding: 0; border-collapse: collapse;" width="100%" cellspacing="0" cellpadding="0">
 <tbody>
 <tr>
 <td align="center"><footer style="text-align: center; padding: 1rem 0;">
-<h2 style="font-size: 0.75rem; font-weight: bold; margin-bottom: 1rem;">DOWNLOAD CASHEERS APP</h2>
-<div style="margin-bottom: 1.5rem;"><a style="margin: 0 0.5rem;" href="https://apps.apple.com/th/app/casheers/id1620837410" target="_blank" rel="noopener"> <img style="height: 2rem;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/7vq/fe0/51o/New%20Project%20%281%29.png" alt="Download on the App Store"> </a> <a style="margin: 0 0.5rem;" href="https://play.google.com/store/apps/details?id=com.casheers.events&amp;pcampaignid=web_share&amp;pli=1" target="_blank" rel="noopener"> <img style="height: 2rem;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/wpc/v5t/mtl/New%20Project.png" alt="Get it on Google Play"> </a></div>
-<div style="margin-bottom: 1.5rem;"><a style="margin: 0 0.5rem;" href="https://www.facebook.com/Casheers" target="_blank" rel="noopener"> <img style="height: 1.5rem;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/t4s/43l/0vm/Facebook_Icon.png" alt="Facebook"> </a> <a style="margin: 0 0.5rem;" href="https://www.instagram.com/casheers_th?igsh=dWg5enE1cGI4NXN1" target="_blank" rel="noopener"> <img style="height: 1.5rem;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/xp8/0mo/kn8/Instagram_Icon.png" alt="Instagram"> </a> <a style="margin: 0 0.5rem;" href="https://x.com/casheers_th" target="_blank" rel="noopener"> <img style="height: 1.5rem;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/gom/n3z/x0d/X_Icon.png" alt="Twitter"> </a> <a style="margin: 0 0.5rem;" href="https://www.tiktok.com/@casheers?_t=8obpTmGjBll&amp;_r=1" target="_blank" rel="noopener"> <img style="height: 1.5rem;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/gs4/yor/wku/Tiktok_Icon.png" alt="TikTok"> </a></div>
-<p style="font-size: 0.5rem; font-weight: bold;">หากคุณมีข้อข้อติดต่อสอบถามเพิ่มเติม<br>ติดต่อเรา <a style="color: #ffffff; text-decoration: underline;" href="https://casheers.com/">https://casheers.com/</a></p>
+<h2 style="font-size: 1.25rem; font-weight: bold; margin-bottom: 1rem;">DOWNLOAD CASHEERS APP</h2>
+<div style="margin-bottom: 2rem;"><a style="margin: 0 0.5rem;" href="https://apps.apple.com/th/app/casheers/id1620837410" target="_blank" rel="noopener"> <img style="height: 2rem;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/7vq/fe0/51o/New%20Project%20%281%29.png" alt="Download on the App Store"> </a> <a style="margin: 0 0.5rem;" href="https://play.google.com/store/apps/details?id=com.casheers.events&amp;pcampaignid=web_share&amp;pli=1" target="_blank" rel="noopener"> <img style="height: 2rem;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/wpc/v5t/mtl/New%20Project.png" alt="Get it on Google Play"> </a></div>
+<div style="margin-bottom: 2rem;"><a style="margin: 0 0.5rem;" href="https://www.facebook.com/Casheers" target="_blank" rel="noopener"> <img style="height: 1.5rem;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/t4s/43l/0vm/Facebook_Icon.png" alt="Facebook"> </a> <a style="margin: 0 0.5rem;" href="https://www.instagram.com/casheers_th?igsh=dWg5enE1cGI4NXN1" target="_blank" rel="noopener"> <img style="height: 1.5rem;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/xp8/0mo/kn8/Instagram_Icon.png" alt="Instagram"> </a> <a style="margin: 0 0.5rem;" href="https://x.com/casheers_th" target="_blank" rel="noopener"> <img style="height: 1.5rem;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/gom/n3z/x0d/X_Icon.png" alt="Twitter"> </a> <a style="margin: 0 0.5rem;" href="https://www.tiktok.com/@casheers?_t=8obpTmGjBll&amp;_r=1" target="_blank" rel="noopener"> <img style="height: 1.5rem;" src="https://d15k2d11r6t6rl.cloudfront.net/pub/bfra/1mrlgx30/gs4/yor/wku/Tiktok_Icon.png" alt="TikTok"> </a></div>
+<p style="font-size: 1rem; font-weight: bold;">หากคุณมีข้อข้อติดต่อสอบถามเพิ่มเติม<br>ติดต่อเรา <a style="color: #ffffff; text-decoration: underline;" href="https://casheers.com/">https://casheers.com/</a></p>
 </footer></td>
 </tr>
 </tbody>
@@ -898,7 +856,7 @@ export default function NewProjectDialog({ open, onClose }) {
                       "favs file edit view insert format tools table help",
                     // Email-friendly content styles
                     content_style:
-                      "body { font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 1.5; } " +
+                      "body { font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 1.0; } " +
                       "p { margin: 0 0 1em 0; } " +
                       "table { border-collapse: collapse; } " +
                       "table td, table th { border: 1px solid #ddd; padding: 8px; } " +
@@ -917,8 +875,8 @@ export default function NewProjectDialog({ open, onClose }) {
                     // Don't remove empty paragraphs (helps with spacing)
                     keep_styles: true,
                     // Email-specific settings
-                    valid_elements: '*[*]', // Allow all elements and attributes
-                    extended_valid_elements: 'style,link[href|rel]',
+                    valid_elements: "*[*]", // Allow all elements and attributes
+                    extended_valid_elements: "style,link[href|rel]",
                   }}
                 />
 
@@ -944,28 +902,35 @@ export default function NewProjectDialog({ open, onClose }) {
                       margin="normal"
                       disabled={isLoading}
                     />
-                    
+
                     {/* Tutorial Link */}
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1, mb: 1 }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        mt: 1,
+                        mb: 1,
+                      }}
+                    >
                       <Link
                         component="button"
                         variant="body2"
                         onClick={handleTutorialOpen}
                         sx={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          color: '#ED6D23',
-                          textDecoration: 'none',
-                          '&:hover': {
-                            textDecoration: 'underline',
-                          }
+                          display: "flex",
+                          alignItems: "center",
+                          color: "#ED6D23",
+                          textDecoration: "none",
+                          "&:hover": {
+                            textDecoration: "underline",
+                          },
                         }}
                       >
                         <HelpOutlineIcon sx={{ fontSize: 16, mr: 0.5 }} />
                         Need help? View tutorial
                       </Link>
                     </Box>
-                    
+
                     <Box
                       sx={{
                         display: "flex",
@@ -1037,20 +1002,22 @@ export default function NewProjectDialog({ open, onClose }) {
                       <Typography variant="h6" component="h2">
                         Uploaded Emails
                       </Typography>
-                      <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
+                      <Box
+                        sx={{ display: "flex", gap: 2, alignItems: "center" }}
+                      >
                         <Link
                           component="button"
                           variant="body2"
                           onClick={handleTutorialOpen}
                           sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            color: '#ED6D23',
-                            textDecoration: 'none',
+                            display: "flex",
+                            alignItems: "center",
+                            color: "#ED6D23",
+                            textDecoration: "none",
                             mr: 2,
-                            '&:hover': {
-                              textDecoration: 'underline',
-                            }
+                            "&:hover": {
+                              textDecoration: "underline",
+                            },
                           }}
                         >
                           <HelpOutlineIcon sx={{ fontSize: 16, mr: 0.5 }} />
@@ -1592,7 +1559,7 @@ export default function NewProjectDialog({ open, onClose }) {
           {notification.message}
         </Alert>
       </Snackbar>
-      
+
       {/* Tutorial Dialog */}
       <Dialog
         open={tutorialOpen}
@@ -1646,26 +1613,26 @@ export default function NewProjectDialog({ open, onClose }) {
             <Typography variant="body1" align="center" paragraph>
               {tutorialSlides[activeSlide].description}
             </Typography>
-            
+
             {/* Service Account Email Copy Field */}
-            <Box 
-              sx={{ 
-                display: 'flex', 
-                flexDirection: 'column', 
-                gap: 2, 
-                width: '100%', 
-                maxWidth: 600, 
-                margin: '0 auto 24px auto',
-                padding: '16px',
-                backgroundColor: '#f5f5f5',
-                borderRadius: '8px'
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 2,
+                width: "100%",
+                maxWidth: 600,
+                margin: "0 auto 24px auto",
+                padding: "16px",
+                backgroundColor: "#f5f5f5",
+                borderRadius: "8px",
               }}
             >
               <Typography variant="subtitle1" fontWeight="bold">
                 Important Resources:
               </Typography>
-              
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 <TextField
                   fullWidth
                   variant="outlined"
@@ -1674,25 +1641,25 @@ export default function NewProjectDialog({ open, onClose }) {
                   InputProps={{
                     readOnly: true,
                     endAdornment: (
-                      <IconButton 
+                      <IconButton
                         onClick={handleCopyToClipboard}
                         size="small"
-                        sx={{ color: copied ? 'green' : '#ED6D23' }}
+                        sx={{ color: copied ? "green" : "#ED6D23" }}
                       >
                         {copied ? <CheckIcon /> : <ContentCopyIcon />}
                       </IconButton>
                     ),
                   }}
                   sx={{
-                    '& .MuiOutlinedInput-root': {
-                      '& fieldset': {
-                        borderColor: '#ED6D23',
+                    "& .MuiOutlinedInput-root": {
+                      "& fieldset": {
+                        borderColor: "#ED6D23",
                       },
-                      '&:hover fieldset': {
-                        borderColor: '#ED6D23',
+                      "&:hover fieldset": {
+                        borderColor: "#ED6D23",
                       },
-                      '&.Mui-focused fieldset': {
-                        borderColor: '#ED6D23',
+                      "&.Mui-focused fieldset": {
+                        borderColor: "#ED6D23",
                       },
                     },
                   }}
@@ -1702,9 +1669,9 @@ export default function NewProjectDialog({ open, onClose }) {
                   startIcon={<DownloadIcon />}
                   onClick={handleDownloadExample}
                   sx={{
-                    backgroundColor: '#ED6D23',
-                    '&:hover': { backgroundColor: '#d65a1c' },
-                    whiteSpace: 'nowrap',
+                    backgroundColor: "#ED6D23",
+                    "&:hover": { backgroundColor: "#d65a1c" },
+                    whiteSpace: "nowrap",
                   }}
                 >
                   Example
@@ -1712,11 +1679,10 @@ export default function NewProjectDialog({ open, onClose }) {
               </Box>
               <Typography variant="caption" color="text.secondary">
                 * Copy this email address to give access to your Google Sheet
-                <br />
-                * Download our example file to see the required format
+                <br />* Download our example file to see the required format
               </Typography>
             </Box>
-            
+
             {/* Navigation stepper */}
             <MobileStepper
               steps={tutorialSlides.length}
@@ -1769,7 +1735,7 @@ export default function NewProjectDialog({ open, onClose }) {
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button 
+          <Button
             onClick={handleTutorialClose}
             variant="contained"
             sx={{
