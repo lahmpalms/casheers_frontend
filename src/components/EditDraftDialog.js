@@ -542,19 +542,24 @@ export default function EditDraftDialog({ open, onClose, projectId }) {
                           margin: 0;
                           padding: 16px;
                         }
-                        p { margin: 0 0 1em 0; }
+                        div { margin: 0 0 1em 0; }
                         table { border-collapse: collapse; }
                         table td, table th { border: 1px solid #ddd; padding: 8px; }
                         img { max-width: 100%; height: auto; }
                         .mce-content-body [data-mce-selected=inline-boundary] { background-color: transparent; }
                       `,
                       // Email-specific settings
-                      forced_root_block: "p",
+                      forced_root_block: "div",
                       remove_trailing_brs: false,
                       paste_as_text: false,
+                      paste_block_drop: false,
+                      paste_data_images: true,
+                      paste_merge_formats: true,
+                      paste_webkit_styles: "all",
+                      paste_retain_style_properties: "all",
                       convert_urls: false,
                       valid_elements: '*[*]', // Allow all elements and attributes
-                      extended_valid_elements: 'style,link[href|rel]',
+                      extended_valid_elements: 'style,link[href|rel],div[*],span[*],br[*]',
                       entity_encoding: 'raw',
                       // Ensure newlines are preserved
                       newline_behavior: "block",
