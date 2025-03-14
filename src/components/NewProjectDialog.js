@@ -35,6 +35,7 @@ import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import DownloadIcon from "@mui/icons-material/Download";
 import CheckIcon from "@mui/icons-material/Check";
+import { formatDate, formatISOToThailandTime } from '../utils/dateUtils';
 
 // Custom StepConnector style
 const CustomStepConnector = styled(StepConnector)(() => ({
@@ -1401,7 +1402,7 @@ export default function NewProjectDialog({ open, onClose }) {
                             status: recipient.status,
                             error_message: recipient.error_message,
                             sent_at: recipient.sent_at
-                              ? new Date(recipient.sent_at).toLocaleString()
+                              ? formatDate(recipient.sent_at)
                               : "-",
                           })
                         )}
