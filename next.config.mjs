@@ -1,35 +1,39 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Suppress console logs in production
-  webpack: (config, { isServer, dev }) => {
-    // If in production, override console methods
-    if (!dev) {
-      // This will be executed in the browser
-      config.optimization.minimizer.push({
-        apply: (compiler) => {
-          compiler.hooks.compilation.tap('RemoveConsolePlugin', (compilation) => {
-            compilation.hooks.optimizeChunkAssets.tap('RemoveConsolePlugin', (chunks) => {
-              for (const chunk of chunks) {
-                for (const file of chunk.files) {
-                  if (file.endsWith('.js')) {
-                    compilation.assets[file] = {
-                      source: () => {
-                        const src = compilation.assets[file].source();
-                        // Replace console.log and console.error with empty functions
-                        return src
-                          .replace(/console\.log\s*\([^)]*\)\s*;?/g, '')
-                          .replace(/console\.error\s*\([^)]*\)\s*;?/g, 'console.error("An error occurred");');
-                      },
-                      size: () => compilation.assets[file].size(),
-                    };
-                  }
-                }
-              }
-            });
-          });
-        },
-      });
+  // Configure Terser to properly remove console logs in production
+  swcMinify: true, // Use SWC minifier by default
+  webpack: (config, { dev, isServer }) => {
+    // Only run in production client-side builds
+    if (!dev && !isServer) {
+      // Find the terser plugin in the webpack config
+      const terserPluginIndex = config.optimization.minimizer.findIndex(
+        (minimizer) => minimizer.constructor.name === 'TerserPlugin'
+      );
+
+      if (terserPluginIndex > -1) {
+        // Get the terser plugin instance
+        const terserPlugin = config.optimization.minimizer[terserPluginIndex];
+        
+        // Update the terser options to drop console.log statements
+        // but keep console.error and console.warn
+        const terserOptions = terserPlugin.options.terserOptions || {};
+        terserOptions.compress = {
+          ...terserOptions.compress,
+          drop_console: false, // Don't drop all console statements
+          pure_funcs: [
+            'console.log',
+            'console.info',
+            'console.debug',
+            'console.time',
+            'console.timeEnd',
+          ],
+        };
+        
+        // Update the plugin options
+        terserPlugin.options.terserOptions = terserOptions;
+      }
     }
+    
     return config;
   },
 };
