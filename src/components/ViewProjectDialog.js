@@ -14,39 +14,63 @@ import {
   Grid,
   Chip,
   Collapse,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Tooltip,
 } from "@mui/material";
 import { Editor } from "@tinymce/tinymce-react";
 import CloseIcon from '@mui/icons-material/Close';
 import EmailIcon from '@mui/icons-material/Email';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import PersonIcon from '@mui/icons-material/Person';
-import { useRef, useState } from 'react';
+import InfoIcon from '@mui/icons-material/Info';
+import DraftsIcon from '@mui/icons-material/Drafts';
+import { useRef, useState, useEffect } from 'react';
+import { formatDate, formatISOToThailandTime, toThailandTime } from '../utils/dateUtils';
+import api from '../lib/api';
 
 export default function ViewProjectDialog({ open, onClose, project, loading }) {
   if (!open) return null;
 
   const editorRef = useRef(null);
   const [showAllRecipients, setShowAllRecipients] = useState(false);
+  const [formattedCreatedAt, setFormattedCreatedAt] = useState('');
+  const [isSettingDraft, setIsSettingDraft] = useState(false);
+  
+  // Format the created_at date when the project changes
+  useEffect(() => {
+    if (project?.created_at) {
+      // Format the date directly using our utility function
+      const formattedDate = formatDate(project.created_at);
+      setFormattedCreatedAt(formattedDate);
+      
+      // Log the raw and formatted dates for debugging
+      console.log('Raw created_at:', project.created_at);
+      console.log('Formatted Thailand time:', formattedDate);
+      
+      // Also log the raw date object for comparison
+      const rawDate = new Date(project.created_at);
+      console.log('Raw Date object:', rawDate.toString());
+      console.log('Raw Date ISO:', rawDate.toISOString());
+      
+      // Log the Thailand time date object
+      const thailandDate = toThailandTime(project.created_at);
+      console.log('Thailand Date object:', thailandDate?.toString());
+      console.log('Thailand Date ISO:', thailandDate?.toISOString());
+    }
+  }, [project]);
   
   // Number of recipients to show initially
   const INITIAL_RECIPIENTS_DISPLAY = 5;
 
-  const formatDate = (dateString) => {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    }).format(date);
-  };
-
   const getStatusColor = (status) => {
     const statusColors = {
       'pending': { bg: '#FFF4E5', color: '#B76E00', dotColor: '#F59E0B' },
-      'completed': { bg: '#E8F5E9', color: '#1B5E20', dotColor: '#22C55E' },
+      'sent': { bg: '#E8F5E9', color: '#1B5E20', dotColor: '#22C55E' },
       'success': { bg: '#E8F5E9', color: '#1B5E20', dotColor: '#22C55E' },
       'failed': { bg: '#FEEBEE', color: '#B71C1C', dotColor: '#EF4444' },
       'in_progress': { bg: '#E3F2FD', color: '#0D47A1', dotColor: '#3B82F6' }
@@ -76,6 +100,27 @@ export default function ViewProjectDialog({ open, onClose, project, loading }) {
   // Check if we need to show "See More" button
   const hasMoreRecipients = project?.recipients?.length > INITIAL_RECIPIENTS_DISPLAY;
 
+  // Function to handle setting project to draft status
+  const handleSetToDraft = async () => {
+    if (!project?.id) return;
+    
+    setIsSettingDraft(true);
+    try {
+      await api.post(`/project/${project.id}/set-draft`, {}, {
+        headers: {
+          accept: "application/json",
+        },
+      });
+      
+      // Close dialog and refresh data
+      onClose(true); // Pass true to indicate successful update that requires refresh
+    } catch (error) {
+      console.error("Error setting project to draft:", error);
+    } finally {
+      setIsSettingDraft(false);
+    }
+  };
+
   return (
     <Dialog 
       open={open} 
@@ -88,18 +133,32 @@ export default function ViewProjectDialog({ open, onClose, project, loading }) {
         <Typography variant="h6" component="div">
           Project Details
         </Typography>
-        <IconButton
-          aria-label="close"
-          onClick={onClose}
-          sx={{
-            position: 'absolute',
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
+        <Box sx={{ position: 'absolute', right: 8, top: 8, display: 'flex', gap: 1 }}>
+          {project && project.status !== 'draft' && (
+            <Tooltip title="Set to Draft">
+              <IconButton
+                size="small"
+                onClick={handleSetToDraft}
+                disabled={isSettingDraft}
+                sx={{ 
+                  color: '#4B5563',
+                  '&:hover': { backgroundColor: 'rgba(75, 85, 99, 0.04)' }
+                }}
+              >
+                {isSettingDraft ? <CircularProgress size={20} sx={{ color: '#4B5563' }} /> : <DraftsIcon fontSize="small" />}
+              </IconButton>
+            </Tooltip>
+          )}
+          <IconButton
+            aria-label="close"
+            onClick={onClose}
+            sx={{
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </Box>
       </DialogTitle>
 
       <DialogContent dividers>
@@ -126,7 +185,7 @@ export default function ViewProjectDialog({ open, onClose, project, loading }) {
                 />
                 <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                   <AccessTimeIcon sx={{ fontSize: '1rem', color: 'text.secondary' }} />
-                  {formatDate(project.created_at)}
+                  {formattedCreatedAt}
                 </Typography>
               </Box>
             </Box>
@@ -213,76 +272,73 @@ export default function ViewProjectDialog({ open, onClose, project, loading }) {
                       Recipients ({recipientsCount})
                     </Typography>
                   </Box>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                      {displayedRecipients?.map((recipient, index) => {
-                        const statusColor = getStatusColor(recipient.status);
-                        const statusText = formatStatus(recipient.status);
-                        return (
-                          <Chip
-                            key={index}
-                            label={
-                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                <Box
-                                  component="span"
-                                  sx={{
-                                    width: 10,
-                                    height: 10,
-                                    borderRadius: '50%',
-                                    backgroundColor: statusColor.dotColor,
-                                    display: 'inline-block',
-                                    boxShadow: `0 0 0 1px ${statusColor.color}`
-                                  }}
-                                />
-                                <span>{recipient.email}</span>
-                                <Box
-                                  component="span"
-                                  sx={{
-                                    fontSize: '0.7rem',
-                                    padding: '0 4px',
-                                    borderRadius: '4px',
-                                    backgroundColor: statusColor.dotColor,
-                                    color: '#fff',
-                                    fontWeight: 'bold',
-                                    ml: 0.5
-                                  }}
-                                >
-                                  {statusText}
-                                </Box>
-                              </Box>
-                            }
-                            title={`Email: ${recipient.email}, Status: ${statusText}`}
-                            sx={{
-                              backgroundColor: statusColor.bg,
-                              color: statusColor.color,
-                              border: `1px solid ${statusColor.color}40`,
-                              '& .MuiChip-label': {
-                                fontSize: '0.875rem',
-                                display: 'flex',
-                                alignItems: 'center',
-                                padding: '4px 8px'
-                              }
-                            }}
-                          />
-                        );
-                      }) || 'No recipients'}
-                    </Box>
-                    
-                    {hasMoreRecipients && (
-                      <Button 
-                        onClick={() => setShowAllRecipients(!showAllRecipients)}
-                        sx={{ 
-                          alignSelf: 'flex-start',
-                          color: '#ED6D23',
-                          '&:hover': {
-                            backgroundColor: 'rgba(237, 109, 35, 0.04)'
-                          }
-                        }}
-                      >
-                        {showAllRecipients ? 'Show Less' : `See All (${recipientsCount})`}
-                      </Button>
-                    )}
-                  </Box>
+                  <TableContainer>
+                    <Table size="small">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Email Address</TableCell>
+                          <TableCell>Status</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {displayedRecipients?.length > 0 ? (
+                          displayedRecipients.map((recipient, index) => {
+                            const statusColor = getStatusColor(recipient.status);
+                            const statusText = formatStatus(recipient.status);
+                            return (
+                              <TableRow key={index}>
+                                <TableCell>{recipient.email}</TableCell>
+                                <TableCell>
+                                  {recipient.status === "success" || recipient.status === "completed" || recipient.status === "sent" ? (
+                                    <Typography variant="body2" color="success.main">
+                                      Sent {recipient.sent_at ? formatDate(recipient.sent_at) : ""}
+                                    </Typography>
+                                  ) : recipient.status === "failed" ? (
+                                    <Tooltip title={recipient.error_message || "Failed to send"}>
+                                      <Typography variant="body2" color="error.main">
+                                        Failed
+                                      </Typography>
+                                    </Tooltip>
+                                  ) : recipient.status === "in_progress" ? (
+                                    <Typography variant="body2" color="primary.main">
+                                      In Progress
+                                    </Typography>
+                                  ) : (
+                                    <Typography variant="body2" color="text.secondary">
+                                      Pending
+                                    </Typography>
+                                  )}
+                                </TableCell>
+                              </TableRow>
+                            );
+                          })
+                        ) : (
+                          <TableRow>
+                            <TableCell colSpan={2} align="center">
+                              <Typography variant="body2" color="text.secondary">
+                                No recipients
+                              </Typography>
+                            </TableCell>
+                          </TableRow>
+                        )}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                  
+                  {hasMoreRecipients && (
+                    <Button 
+                      onClick={() => setShowAllRecipients(!showAllRecipients)}
+                      sx={{ 
+                        mt: 2,
+                        color: '#ED6D23',
+                        '&:hover': {
+                          backgroundColor: 'rgba(237, 109, 35, 0.04)'
+                        }
+                      }}
+                    >
+                      {showAllRecipients ? 'Show Less' : `See All (${recipientsCount})`}
+                    </Button>
+                  )}
                 </Paper>
               </Grid>
 

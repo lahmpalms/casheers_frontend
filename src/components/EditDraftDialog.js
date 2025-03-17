@@ -29,20 +29,21 @@ import { Editor } from "@tinymce/tinymce-react";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
-import SendIcon from "@mui/icons-material/Send";
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
+import UpdateIcon from '@mui/icons-material/Update';
+import { formatDate, formatISOToThailandTime } from '../utils/dateUtils';
 
 export default function EditDraftDialog({ open, onClose, projectId }) {
   const editorRef = useRef(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSending, setIsSending] = useState(false);
+  const [isSendingAll, setIsSendingAll] = useState(false);
+  const [isSendingNew, setIsSendingNew] = useState(false);
   const [notification, setNotification] = useState({
     open: false,
     message: "",
     severity: "info",
   });
-  // Send confirmation dialog
-  const [openSendConfirm, setOpenSendConfirm] = useState(false);
   
   // Project data state
   const [projectData, setProjectData] = useState({
@@ -90,7 +91,7 @@ export default function EditDraftDialog({ open, onClose, projectId }) {
   };
 
   const handleDialogClose = () => {
-    if (!isSubmitting && !isSending) {
+    if (!isSubmitting && !isSendingAll && !isSendingNew) {
       onClose();
     }
   };
@@ -115,7 +116,7 @@ export default function EditDraftDialog({ open, onClose, projectId }) {
   };
 
   // Handle adding a new email
-  const handleAddEmail = () => {
+  const handleAddEmail = async () => {
     if (!newEmail.trim()) {
       setEmailError("Email cannot be empty");
       return;
@@ -132,21 +133,49 @@ export default function EditDraftDialog({ open, onClose, projectId }) {
       return;
     }
 
-    // Add new recipient with default values
-    setProjectData(prev => ({
-      ...prev,
-      recipients: [
-        ...prev.recipients, 
-        {
-          email: newEmail,
-          status: "pending",
-          error_message: null,
-          sent_at: null
-        }
-      ]
-    }));
-    setNewEmail("");
-    setEmailError("");
+    setIsSubmitting(true);
+    try {
+      // Call API to add email
+      await api.post(`/project/${projectId}/add-emails`, `emails=${newEmail}`, {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "accept": "application/json",
+        },
+      });
+
+      // Add new recipient with default values
+      setProjectData(prev => ({
+        ...prev,
+        recipients: [
+          ...prev.recipients, 
+          {
+            email: newEmail,
+            status: "pending",
+            error_message: null,
+            sent_at: null
+          }
+        ]
+      }));
+      
+      setNewEmail("");
+      setEmailError("");
+      
+      // Show success notification
+      setNotification({
+        open: true,
+        message: "Email added successfully!",
+        severity: "success",
+      });
+    } catch (error) {
+      console.error("Error adding email:", error);
+      setNotification({
+        open: true,
+        message: error.response?.data?.message || "Failed to add email",
+        severity: "error",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // Handle removing an email
@@ -206,6 +235,12 @@ export default function EditDraftDialog({ open, onClose, projectId }) {
   const handleSaveDraft = async () => {
     if (!validateForm()) return;
     
+    // Get the latest content from the editor
+    let htmlContent = projectData.htmlTemplate;
+    if (editorRef.current) {
+      htmlContent = editorRef.current.getContent();
+    }
+    
     setIsSubmitting(true);
     try {
       // Show updating draft notification
@@ -219,7 +254,7 @@ export default function EditDraftDialog({ open, onClose, projectId }) {
       await api.patch(`/project/${projectId}`, {
         name: projectData.name,
         subject: projectData.subject,
-        htmlTemplate: projectData.htmlTemplate,
+        htmlTemplate: htmlContent,
         recipients: projectData.recipients,
       }, {
         headers: {
@@ -252,60 +287,53 @@ export default function EditDraftDialog({ open, onClose, projectId }) {
   };
 
   const handleSaveClick = () => {
-    if (editorRef.current) {
-      const content = editorRef.current.getContent();
-      handleEditorChange(content);
-      handleSaveDraft();
-    } else {
-      handleSaveDraft();
-    }
+    // We don't need to manually update the content here anymore
+    // as handleSaveDraft will get the latest content directly
+    handleSaveDraft();
   };
 
-  const handleSendClick = () => {
-    if (editorRef.current) {
-      const content = editorRef.current.getContent();
-      handleEditorChange(content);
-    }
-    
+  // Handle sending all emails
+  const handleSendAllEmails = async () => {
+    // First save the draft to ensure all changes are saved
     if (!validateForm()) return;
     
-    setOpenSendConfirm(true);
-  };
-
-  const handleSendEmails = async () => {
-    // First save the draft to ensure all changes are saved
-    setIsSending(true);
+    // Get the latest content from the editor
+    let htmlContent = projectData.htmlTemplate;
+    if (editorRef.current) {
+      htmlContent = editorRef.current.getContent();
+    }
+    
+    setIsSendingAll(true);
     try {
       // Show saving notification
       setNotification({
         open: true,
-        message: "Saving draft before sending...",
+        message: "Saving changes before sending...",
         severity: "info",
       });
-
-      // Save draft first
+      
+      // Save the draft first
       await api.patch(`/project/${projectId}`, {
         name: projectData.name,
         subject: projectData.subject,
-        htmlTemplate: projectData.htmlTemplate,
+        htmlTemplate: htmlContent,
         recipients: projectData.recipients,
       }, {
         headers: {
           "Content-Type": "application/json",
         },
       });
-
+      
       // Show sending notification
       setNotification({
         open: true,
-        message: "Sending emails...",
+        message: "Sending all emails...",
         severity: "info",
       });
 
-      // Send emails
-      const response = await api.post(`/project/${projectId}/send`, {}, {
+      // Send all emails
+      const response = await api.post(`/project/${projectId}/send-all-emails`, {}, {
         headers: {
-          "Content-Type": "application/json",
           "accept": "application/json",
         },
       });
@@ -313,26 +341,94 @@ export default function EditDraftDialog({ open, onClose, projectId }) {
       // Show success notification
       setNotification({
         open: true,
-        message: response.data.message || "Emails sent successfully!",
+        message: response.data.message || "All emails sent successfully!",
         severity: "success",
       });
       
-      // Close dialogs after a short delay
+      // Close dialog after a short delay
       setTimeout(() => {
-        setOpenSendConfirm(false);
         onClose(true); // Pass true to indicate successful update
       }, 1500);
       
     } catch (error) {
-      console.error("Error sending emails:", error);
+      console.error("Error sending all emails:", error);
       setNotification({
         open: true,
-        message: error.response?.data?.message || "Failed to send emails",
+        message: error.response?.data?.message || "Failed to send all emails",
         severity: "error",
       });
-      setOpenSendConfirm(false);
     } finally {
-      setIsSending(false);
+      setIsSendingAll(false);
+    }
+  };
+
+  // Handle sending new emails
+  const handleSendNewEmails = async () => {
+    // First save the draft to ensure all changes are saved
+    if (!validateForm()) return;
+    
+    // Get the latest content from the editor
+    let htmlContent = projectData.htmlTemplate;
+    if (editorRef.current) {
+      htmlContent = editorRef.current.getContent();
+    }
+    
+    setIsSendingNew(true);
+    try {
+      // Show saving notification
+      setNotification({
+        open: true,
+        message: "Saving changes before sending...",
+        severity: "info",
+      });
+      
+      // Save the draft first
+      await api.patch(`/project/${projectId}`, {
+        name: projectData.name,
+        subject: projectData.subject,
+        htmlTemplate: htmlContent,
+        recipients: projectData.recipients,
+      }, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      
+      // Show sending notification
+      setNotification({
+        open: true,
+        message: "Sending new emails...",
+        severity: "info",
+      });
+
+      // Send new emails
+      const response = await api.post(`/project/${projectId}/send-new-emails`, {}, {
+        headers: {
+          "accept": "application/json",
+        },
+      });
+
+      // Show success notification
+      setNotification({
+        open: true,
+        message: response.data.message || "New emails sent successfully!",
+        severity: "success",
+      });
+      
+      // Close dialog after a short delay
+      setTimeout(() => {
+        onClose(true); // Pass true to indicate successful update
+      }, 1500);
+      
+    } catch (error) {
+      console.error("Error sending new emails:", error);
+      setNotification({
+        open: true,
+        message: error.response?.data?.message || "Failed to send new emails",
+        severity: "error",
+      });
+    } finally {
+      setIsSendingNew(false);
     }
   };
 
@@ -426,6 +522,7 @@ export default function EditDraftDialog({ open, onClose, projectId }) {
                     variant="contained"
                     startIcon={<AddIcon />}
                     onClick={handleAddEmail}
+                    disabled={isSubmitting}
                     sx={{
                       backgroundColor: "#ED6D23",
                       '&:hover': {
@@ -434,7 +531,7 @@ export default function EditDraftDialog({ open, onClose, projectId }) {
                       height: '56px',
                     }}
                   >
-                    Add
+                    {isSubmitting ? <CircularProgress size={20} color="inherit" /> : "Add"}
                   </Button>
                 </Box>
                 
@@ -455,7 +552,7 @@ export default function EditDraftDialog({ open, onClose, projectId }) {
                             <TableCell>
                               {recipient.status === "sent" ? (
                                 <Typography variant="body2" color="success.main">
-                                  Sent {recipient.sent_at ? new Date(recipient.sent_at).toLocaleString() : ""}
+                                  Sent {recipient.sent_at ? formatDate(recipient.sent_at) : ""}
                                 </Typography>
                               ) : recipient.status === "failed" ? (
                                 <Tooltip title={recipient.error_message || "Failed to send"}>
@@ -494,6 +591,39 @@ export default function EditDraftDialog({ open, onClose, projectId }) {
                     </TableBody>
                   </Table>
                 </TableContainer>
+                
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mt: 2 }}>
+                  <Button
+                    variant="contained"
+                    size="small"
+                    startIcon={<MailOutlineIcon />}
+                    onClick={handleSendAllEmails}
+                    disabled={isSendingAll || isSendingNew || projectData.recipients.length === 0}
+                    sx={{
+                      backgroundColor: "#4CAF50",
+                      '&:hover': {
+                        backgroundColor: "#388E3C",
+                      },
+                    }}
+                  >
+                    {isSendingAll ? <CircularProgress size={20} color="inherit" /> : "Send All Emails"}
+                  </Button>
+                  <Button
+                    variant="contained"
+                    size="small"
+                    startIcon={<UpdateIcon />}
+                    onClick={handleSendNewEmails}
+                    disabled={isSendingAll || isSendingNew || projectData.recipients.length === 0}
+                    sx={{
+                      backgroundColor: "#3B82F6",
+                      '&:hover': {
+                        backgroundColor: "#2563EB",
+                      },
+                    }}
+                  >
+                    {isSendingNew ? <CircularProgress size={20} color="inherit" /> : "Send New Emails"}
+                  </Button>
+                </Box>
               </Paper>
               
               <Paper sx={{ p: 3, flexGrow: 1 }}>
@@ -505,6 +635,7 @@ export default function EditDraftDialog({ open, onClose, projectId }) {
                     apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY}
                     onInit={(evt, editor) => (editorRef.current = editor)}
                     initialValue={projectData.htmlTemplate}
+                    onEditorChange={handleEditorChange}
                     init={{
                       height: "100%",
                       menubar: true,
@@ -551,18 +682,14 @@ export default function EditDraftDialog({ open, onClose, projectId }) {
                       // Email-specific settings
                       forced_root_block: "div",
                       remove_trailing_brs: false,
-                      paste_as_text: false,
-                      paste_block_drop: false,
                       paste_data_images: true,
-                      paste_merge_formats: true,
-                      paste_webkit_styles: "all",
-                      paste_retain_style_properties: "all",
                       convert_urls: false,
                       valid_elements: '*[*]', // Allow all elements and attributes
                       extended_valid_elements: 'style,link[href|rel],div[*],span[*],br[*]',
                       entity_encoding: 'raw',
                       // Ensure newlines are preserved
                       newline_behavior: "block",
+                      // Remove the setup function that might be causing conflicts
                     }}
                   />
                 </Box>
@@ -575,7 +702,7 @@ export default function EditDraftDialog({ open, onClose, projectId }) {
           <Button
             onClick={handleDialogClose}
             variant="outlined"
-            disabled={isSubmitting || isSending}
+            disabled={isSubmitting || isSendingAll || isSendingNew}
             sx={{
               color: 'rgba(0, 0, 0, 0.6)',
               borderColor: 'rgba(0, 0, 0, 0.23)',
@@ -589,23 +716,9 @@ export default function EditDraftDialog({ open, onClose, projectId }) {
           </Button>
           <Box sx={{ display: 'flex', gap: 2 }}>
             <Button
-              onClick={handleSendClick}
-              variant="contained"
-              disabled={isSubmitting || isSending}
-              startIcon={<SendIcon />}
-              sx={{
-                backgroundColor: "#4CAF50",
-                '&:hover': {
-                  backgroundColor: "#388E3C",
-                }
-              }}
-            >
-              Send Emails
-            </Button>
-            <Button
               onClick={handleSaveClick}
               variant="contained"
-              disabled={isSubmitting || isSending}
+              disabled={isSubmitting || isSendingAll || isSendingNew}
               sx={{
                 backgroundColor: "#ED6D23",
                 '&:hover': {
@@ -617,48 +730,6 @@ export default function EditDraftDialog({ open, onClose, projectId }) {
               {isSubmitting ? "Saving..." : "Save Draft"}
             </Button>
           </Box>
-        </DialogActions>
-      </Dialog>
-      
-      {/* Send Confirmation Dialog */}
-      <Dialog
-        open={openSendConfirm}
-        onClose={() => !isSending && setOpenSendConfirm(false)}
-        aria-labelledby="send-dialog-title"
-        aria-describedby="send-dialog-description"
-      >
-        <DialogTitle id="send-dialog-title">
-          Send Emails
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="send-dialog-description">
-            Are you sure you want to send emails to {projectData.recipients.length} recipient{projectData.recipients.length !== 1 ? 's' : ''}? 
-            This action will save your draft and send the emails immediately.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button 
-            onClick={() => setOpenSendConfirm(false)} 
-            disabled={isSending}
-            sx={{ color: 'rgba(0, 0, 0, 0.67)' }}
-          >
-            Cancel
-          </Button>
-          <Button 
-            onClick={handleSendEmails} 
-            color="primary" 
-            variant="contained"
-            disabled={isSending}
-            startIcon={isSending ? <CircularProgress size={20} color="inherit" /> : <SendIcon />}
-            sx={{
-              backgroundColor: "#4CAF50",
-              '&:hover': {
-                backgroundColor: "#388E3C",
-              }
-            }}
-          >
-            {isSending ? "Sending..." : "Send"}
-          </Button>
         </DialogActions>
       </Dialog>
       
