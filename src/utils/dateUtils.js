@@ -1,4 +1,5 @@
 // Utility functions for date formatting with Thailand timezone (UTC+7)
+import logger from './logger';
 
 // Helper function to convert any date to Thailand time (UTC+7)
 const convertToThailandTime = (date) => {
@@ -8,7 +9,7 @@ const convertToThailandTime = (date) => {
     // Create a new date with 7 hours added (UTC+7)
     return new Date(date.getTime() + (7 * 60 * 60 * 1000));
   } catch (error) {
-    console.error('Error converting to Thailand time:', error);
+    logger.error('Error converting to Thailand time', error);
     return null;
   }
 };
@@ -41,7 +42,7 @@ export const formatDate = (dateString) => {
     
     return thailandTime.toLocaleString('en-US', options);
   } catch (error) {
-    console.error('Error formatting date:', error);
+    logger.error('Error formatting date', error);
     return '';
   }
 };
@@ -75,7 +76,7 @@ export const formatDateTime = (dateString) => {
     
     return thailandTime.toLocaleString('en-US', options);
   } catch (error) {
-    console.error('Error formatting date time:', error);
+    logger.error('Error formatting date time', error);
     return '';
   }
 };
@@ -107,7 +108,7 @@ export const formatDateShort = (dateString) => {
     
     return thailandTime.toLocaleString('en-US', options);
   } catch (error) {
-    console.error('Error formatting short date:', error);
+    logger.error('Error formatting short date', error);
     return '';
   }
 };
@@ -128,7 +129,7 @@ export const toThailandTime = (dateString) => {
     // Convert to Thailand time
     return convertToThailandTime(date);
   } catch (error) {
-    console.error('Error converting to Thailand time:', error);
+    logger.error('Error converting to Thailand time', error);
     return null;
   }
 };
@@ -152,7 +153,7 @@ export const formatISOToThailandTime = (isoString) => {
     // Format as ISO string and replace Z with +07:00
     return thailandTime.toISOString().replace('Z', '+07:00');
   } catch (error) {
-    console.error('Error formatting ISO to Thailand time:', error);
+    logger.error('Error formatting ISO to Thailand time', error);
     return '';
   }
 }; 

@@ -160,6 +160,7 @@ const ProjectsPage = () => {
       renderCell: (value) => (
         <Typography
           variant="subtitle2"
+          component="span"
           sx={{
             fontWeight: 500,
             color: 'rgba(0, 0, 0, 0.87)',
@@ -177,7 +178,7 @@ const ProjectsPage = () => {
       label: "Subject", 
       minWidth: 180,
       renderCell: (value) => (
-        <Typography variant="body2" sx={{ color: 'rgba(0, 0, 0, 0.87)' }}>
+        <Typography variant="body2" component="span" sx={{ color: 'rgba(0, 0, 0, 0.87)' }}>
           {value}
         </Typography>
       )
@@ -199,6 +200,7 @@ const ProjectsPage = () => {
         
         return (
           <Box
+            component="span"
             sx={{
               backgroundColor: colors.bg,
               color: colors.color,
@@ -222,8 +224,7 @@ const ProjectsPage = () => {
       label: "Created By", 
       minWidth: 200,
       renderCell: (value) => (
-        <Typography
-          variant="body2"
+        <Box
           sx={{
             color: 'rgba(0, 0, 0, 0.67)',
             display: 'flex',
@@ -232,6 +233,7 @@ const ProjectsPage = () => {
           }}
         >
           <Box
+            component="span"
             sx={{
               width: 24,
               height: 24,
@@ -247,8 +249,10 @@ const ProjectsPage = () => {
           >
             {value?.charAt(0)?.toUpperCase() || '?'}
           </Box>
-          {value}
-        </Typography>
+          <Typography variant="body2">
+            {value}
+          </Typography>
+        </Box>
       )
     },
     {
@@ -515,7 +519,7 @@ const ProjectsPage = () => {
               {loading ? (
                 // Show loading skeletons
                 [...Array(rowsPerPage)].map((_, index) => (
-                  <LoadingSkeleton key={index} />
+                  <LoadingSkeleton key={`skeleton-${index}`} />
                 ))
               ) : rows.length > 0 ? (
                 rows.map((row) => (
@@ -523,7 +527,7 @@ const ProjectsPage = () => {
                     hover
                     role="checkbox"
                     tabIndex={-1}
-                    key={row._id}
+                    key={row.id}
                     onClick={() => handleViewProject(row.id)}
                     sx={{ 
                       cursor: 'pointer',
@@ -563,6 +567,7 @@ const ProjectsPage = () => {
                     >
                       <Typography 
                         variant="body1" 
+                        component="div"
                         sx={{ 
                           color: 'rgba(0, 0, 0, 0.67)',
                           fontWeight: 500
