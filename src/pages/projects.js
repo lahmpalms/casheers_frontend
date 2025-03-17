@@ -27,20 +27,18 @@ import api from "../lib/api";
 import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { formatDate, formatDateTime, formatDateShort, toThailandTime } from '../utils/dateUtils';
 
 const NewProjectDialog = dynamic(() => import("../components/NewProjectDialog"), {
-  ssr: false,
-  loading: () => <CircularProgress sx={{ color: "#ED6D23" }} />
+  loading: () => <CircularProgress sx={{ color: "#ED6D23" }} />,
 });
 
 const ViewProjectDialog = dynamic(() => import("../components/ViewProjectDialog"), {
-  ssr: false,
-  loading: () => <CircularProgress sx={{ color: "#ED6D23" }} />
+  loading: () => <CircularProgress sx={{ color: "#ED6D23" }} />,
 });
 
 const EditDraftDialog = dynamic(() => import("../components/EditDraftDialog"), {
-  ssr: false,
-  loading: () => <CircularProgress sx={{ color: "#ED6D23" }} />
+  loading: () => <CircularProgress sx={{ color: "#ED6D23" }} />,
 });
 
 const ProjectsPage = () => {
@@ -61,6 +59,24 @@ const ProjectsPage = () => {
   const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false);
   const [projectToDelete, setProjectToDelete] = useState(null);
   const [deletingProject, setDeletingProject] = useState(false);
+
+  // Test Thailand time formatting
+  useEffect(() => {
+    // Create a test date
+    const testDate = new Date();
+    console.log('Test Date (Local):', testDate.toString());
+    console.log('Test Date (ISO):', testDate.toISOString());
+    
+    // Format using our utility functions
+    console.log('Formatted Date (Thailand):', formatDate(testDate));
+    console.log('Formatted DateTime (Thailand):', formatDateTime(testDate));
+    console.log('Formatted DateShort (Thailand):', formatDateShort(testDate));
+    
+    // Convert to Thailand time
+    const thailandTime = toThailandTime(testDate);
+    console.log('Thailand Time:', thailandTime?.toString());
+    console.log('Thailand Time (ISO):', thailandTime?.toISOString());
+  }, []);
 
   const fetchProjects = () => {
     setLoading(true);
@@ -92,6 +108,7 @@ const ProjectsPage = () => {
       const response = await api.get(`/project/${projectId}`, {
         headers: { accept: "application/json" },
       });
+      console.log('Project data:', response.data);
       setSelectedProject(response.data);
       setOpenViewProject(true);
     } catch (err) {
@@ -143,6 +160,7 @@ const ProjectsPage = () => {
       renderCell: (value) => (
         <Typography
           variant="subtitle2"
+          component="span"
           sx={{
             fontWeight: 500,
             color: 'rgba(0, 0, 0, 0.87)',
@@ -160,7 +178,7 @@ const ProjectsPage = () => {
       label: "Subject", 
       minWidth: 180,
       renderCell: (value) => (
-        <Typography variant="body2" sx={{ color: 'rgba(0, 0, 0, 0.87)' }}>
+        <Typography variant="body2" component="span" sx={{ color: 'rgba(0, 0, 0, 0.87)' }}>
           {value}
         </Typography>
       )
@@ -172,7 +190,7 @@ const ProjectsPage = () => {
       renderCell: (value) => {
         const statusColors = {
           'pending': { bg: '#FFF4E5', color: '#B76E00' },
-          'completed': { bg: '#E8F5E9', color: '#1B5E20' },
+          'sent': { bg: '#E8F5E9', color: '#1B5E20' },
           'failed': { bg: '#FEEBEE', color: '#B71C1C' },
           'in_progress': { bg: '#E3F2FD', color: '#0D47A1' },
           'draft': { bg: '#F3F4F6', color: '#4B5563' }
@@ -182,6 +200,7 @@ const ProjectsPage = () => {
         
         return (
           <Box
+            component="span"
             sx={{
               backgroundColor: colors.bg,
               color: colors.color,
@@ -205,8 +224,7 @@ const ProjectsPage = () => {
       label: "Created By", 
       minWidth: 200,
       renderCell: (value) => (
-        <Typography
-          variant="body2"
+        <Box
           sx={{
             color: 'rgba(0, 0, 0, 0.67)',
             display: 'flex',
@@ -215,6 +233,7 @@ const ProjectsPage = () => {
           }}
         >
           <Box
+            component="span"
             sx={{
               width: 24,
               height: 24,
@@ -230,8 +249,10 @@ const ProjectsPage = () => {
           >
             {value?.charAt(0)?.toUpperCase() || '?'}
           </Box>
-          {value}
-        </Typography>
+          <Typography variant="body2">
+            {value}
+          </Typography>
+        </Box>
       )
     },
     {
@@ -362,9 +383,12 @@ const ProjectsPage = () => {
       {/* View Project Dialog */}
       <ViewProjectDialog
         open={openViewProject}
-        onClose={() => {
+        onClose={(refreshNeeded) => {
           setOpenViewProject(false);
           setSelectedProject(null);
+          if (refreshNeeded) {
+            fetchProjects(); // Refresh the list if changes were made
+          }
         }}
         project={selectedProject}
         loading={loadingProjectDetails}
@@ -495,7 +519,7 @@ const ProjectsPage = () => {
               {loading ? (
                 // Show loading skeletons
                 [...Array(rowsPerPage)].map((_, index) => (
-                  <LoadingSkeleton key={index} />
+                  <LoadingSkeleton key={`skeleton-${index}`} />
                 ))
               ) : rows.length > 0 ? (
                 rows.map((row) => (
@@ -503,7 +527,7 @@ const ProjectsPage = () => {
                     hover
                     role="checkbox"
                     tabIndex={-1}
-                    key={row._id}
+                    key={row.id}
                     onClick={() => handleViewProject(row.id)}
                     sx={{ 
                       cursor: 'pointer',
@@ -543,6 +567,7 @@ const ProjectsPage = () => {
                     >
                       <Typography 
                         variant="body1" 
+                        component="div"
                         sx={{ 
                           color: 'rgba(0, 0, 0, 0.67)',
                           fontWeight: 500
